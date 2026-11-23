@@ -9,6 +9,19 @@ import {
   validateCuratedWord,
 } from '../../src/lib/albanianLetters';
 
+function containsStraightWord(tiles: readonly string[], size: number, tokens: readonly string[]): boolean {
+  for (let row = 0; row < size; row += 1) {
+    for (let column = 0; column < size; column += 1) {
+      const horizontalFits = column + tokens.length <= size
+        && tokens.every((token, offset) => tiles[row * size + column + offset] === token);
+      const verticalFits = row + tokens.length <= size
+        && tokens.every((token, offset) => tiles[(row + offset) * size + column] === token);
+      if (horizontalFits || verticalFits) return true;
+    }
+  }
+  return false;
+}
+
 describe('Gjej Fjalët Word Connect rounds', () => {
   it('recognizes the same Albanian tile inventory regardless of order or case', () => {
     expect(sameTokenInventory(['SH', 'Ë', 'A', 'LL'], ['ll', 'a', 'sh', 'ë'])).toBe(true);
@@ -45,6 +58,15 @@ describe('Lidh Shkronjat puzzle sets', () => {
         expect(validateCuratedWord(target.word, target.tokens)).toBe(true);
         expect(target.clue.trim().length).toBeGreaterThan(0);
         expect(canBuildWordFromRack(puzzle.tiles, target.tokens)).toBe(true);
+      }
+    }
+  });
+
+  it('places every target in a square grid as a horizontal or vertical line', () => {
+    for (const puzzle of CONNECT_PUZZLES) {
+      expect(puzzle.tiles).toHaveLength(puzzle.gridSize ** 2);
+      for (const target of puzzle.targets) {
+        expect(containsStraightWord(puzzle.tiles, puzzle.gridSize, target.tokens)).toBe(true);
       }
     }
   });

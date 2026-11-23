@@ -28,6 +28,27 @@ function findTileIndices(tiles: readonly string[], tokens: readonly string[]): n
   });
 }
 
+function findLineIndices(tiles: readonly string[], columns: number, tokens: readonly string[]): number[] {
+  const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]] as const;
+  for (let start = 0; start < tiles.length; start += 1) {
+    for (const [rowStep, columnStep] of directions) {
+      const startRow = Math.floor(start / columns);
+      const startColumn = start % columns;
+      const indices = tokens.map((_, offset) => {
+        const row = startRow + rowStep * offset;
+        const column = startColumn + columnStep * offset;
+        return row < 0 || column < 0 || row >= columns || column >= columns
+          ? -1
+          : row * columns + column;
+      });
+      if (indices.every((index, offset) => index >= 0 && tiles[index] === tokens[offset])) {
+        return indices;
+      }
+    }
+  }
+  throw new Error(`Missing straight path for ${tokens.join('')}`);
+}
+
 test('Wordle virtual keyboard fits and accepts an answer on a phone', async ({ page }) => {
   const answer = WORDLE_ANSWERS[0]!;
   await seedState(page, 'shkronjat-tona-wordle-v2', 2, {
@@ -87,8 +108,16 @@ test('touch tap selection works in Lidh Shkronjat on a narrow phone', async ({ p
   });
   await page.goto('/lojerat/lidh-shkronjat');
 
+  const board = page.getByRole('group', { name: 'Pllakat e shkronjave për lidhje' });
+  await expect(board.locator('[data-letter-index]')).toHaveCount(puzzle.gridSize ** 2);
+  const boardDimensions = await board.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return { width: rect.width, height: rect.height };
+  });
+  expect(Math.abs(boardDimensions.width - boardDimensions.height)).toBeLessThanOrEqual(1);
+
   const target = puzzle.targets[0]!;
-  for (const index of findTileIndices(puzzle.tiles, target.tokens)) {
+  for (const index of findLineIndices(puzzle.tiles, puzzle.gridSize, target.tokens)) {
     await page.getByTestId(`connect-tile-${index}`).tap();
   }
   await expect(page.getByTestId('connect-word')).toHaveText('FJALË');

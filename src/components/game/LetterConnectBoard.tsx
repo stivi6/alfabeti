@@ -7,9 +7,11 @@ interface LetterConnectBoardProps {
   selectedIndices: readonly number[];
   onSelectedIndicesChange: (indices: number[]) => void;
   layout: BoardLayout;
+  gridColumns?: number;
   ariaLabel: string;
   testIdPrefix: string;
   disabled?: boolean;
+  onInvalidSelection?: () => void;
 }
 
 interface Point {
@@ -30,9 +32,11 @@ export function LetterConnectBoard({
   selectedIndices,
   onSelectedIndicesChange,
   layout,
+  gridColumns,
   ariaLabel,
   testIdPrefix,
   disabled = false,
+  onInvalidSelection,
 }: LetterConnectBoardProps) {
   const boardRef = useRef<HTMLDivElement>(null);
   const pointerIdRef = useRef<number | null>(null);
@@ -74,11 +78,16 @@ export function LetterConnectBoard({
   const selectIndex = useCallback((index: number) => {
     if (disabled) return;
     if (!Number.isInteger(index) || index < 0 || index >= tiles.length) return;
-    if (selectedRef.current.includes(index)) return;
-    const next = [...selectedRef.current, index];
+    const selected = selectedRef.current;
+    if (selected.includes(index)) return;
+    if (layout === 'grid' && gridColumns && !continuesGridLine(selected, index, gridColumns)) {
+      onInvalidSelection?.();
+      return;
+    }
+    const next = [...selected, index];
     selectedRef.current = next;
     onSelectedIndicesChange(next);
-  }, [disabled, onSelectedIndicesChange, tiles.length]);
+  }, [disabled, gridColumns, layout, onInvalidSelection, onSelectedIndicesChange, tiles.length]);
 
   const tileAtPoint = useCallback((clientX: number, clientY: number) => {
     const board = boardRef.current;
@@ -158,14 +167,17 @@ export function LetterConnectBoard({
       ref={boardRef}
       role="group"
       aria-label={ariaLabel}
-      className={`relative mx-auto touch-none select-none overflow-hidden rounded-[28px] border border-border bg-primary-soft/35 ${layout === 'circle' ? 'aspect-square w-full max-w-[430px]' : 'w-full p-5'}`}
+      className={`relative mx-auto touch-none select-none overflow-hidden rounded-[28px] border border-border bg-primary-soft/35 ${layout === 'circle' ? 'aspect-square w-full max-w-[430px]' : 'aspect-square w-full max-w-[620px] p-2 sm:p-4'}`}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={finishPointer}
       onPointerCancel={finishPointer}
     >
       {layout === 'grid' && (
-        <div className="grid grid-cols-4 gap-3 sm:grid-cols-6">
+        <div
+          className="grid gap-2 sm:gap-3"
+          style={{ gridTemplateColumns: `repeat(${gridColumns ?? 1}, minmax(0, 1fr))` }}
+        >
           {tiles.map((tile, index) => (
             <LetterTile
               key={`${tile}-${index}`}
@@ -242,9 +254,27 @@ function LetterTile({ tile, index, selected, testId, onSelect, disabled = false,
       disabled={disabled}
       onClick={() => onSelect(index)}
       style={style}
-      className={`grid size-14 place-items-center rounded-2xl border-2 text-lg font-extrabold shadow-sm transition sm:size-[68px] ${style ? 'absolute' : ''} ${selected ? 'z-10 border-primary bg-primary text-white shadow-lifted' : 'border-border bg-surface text-ink hover:border-primary/60'}`}
+      className={`grid place-items-center rounded-2xl border-2 text-sm font-extrabold shadow-sm transition sm:text-lg ${style ? 'absolute size-14 sm:size-[68px]' : 'aspect-square w-full min-w-0'} ${selected ? 'z-10 border-primary bg-primary text-white shadow-lifted' : 'border-border bg-surface text-ink hover:border-primary/60'}`}
     >
       {tile}
     </button>
   );
+}
+
+function continuesGridLine(selected: readonly number[], next: number, columns: number): boolean {
+  if (selected.length === 0) return true;
+
+  const previous = selected[selected.length - 1]!;
+  const rowDelta = Math.floor(next / columns) - Math.floor(previous / columns);
+  const columnDelta = (next % columns) - (previous % columns);
+
+  if (selected.length === 1) {
+    return Math.abs(rowDelta) + Math.abs(columnDelta) === 1;
+  }
+
+  const first = selected[0]!;
+  const second = selected[1]!;
+  const rowStep = Math.floor(second / columns) - Math.floor(first / columns);
+  const columnStep = (second % columns) - (first % columns);
+  return rowDelta === rowStep && columnDelta === columnStep;
 }

@@ -10,6 +10,7 @@ export interface ConnectPuzzle {
   id: string;
   title: string;
   clue: string;
+  gridSize: number;
   tiles: string[];
   targets: ConnectTarget[];
 }
@@ -28,26 +29,39 @@ function createPuzzle(
   targets: ConnectTarget[],
   distractors: string[],
 ): ConnectPuzzle {
-  const maxCounts = new Map<string, number>();
-  for (const item of targets) {
-    const wordCounts = new Map<string, number>();
-    for (const token of item.tokens) {
-      wordCounts.set(token, (wordCounts.get(token) ?? 0) + 1);
-    }
-    for (const [token, count] of wordCounts) {
-      maxCounts.set(token, Math.max(maxCounts.get(token) ?? 0, count));
-    }
+  const longestWord = Math.max(...targets.map((item) => item.tokens.length));
+  const gridSize = Math.max(6, targets.length + 1, longestWord + 1);
+  const tiles: Array<string | undefined> = Array(gridSize * gridSize);
+
+  targets.slice(0, -1).forEach((item, row) => {
+    item.tokens.forEach((token, column) => {
+      tiles[row * gridSize + column] = token;
+    });
+  });
+
+  const verticalTarget = targets.at(-1);
+  if (verticalTarget) {
+    verticalTarget.tokens.forEach((token, row) => {
+      tiles[row * gridSize + gridSize - 1] = token;
+    });
   }
 
-  const tiles = [...maxCounts].flatMap(([token, count]) => Array<string>(count).fill(token));
-  tiles.push(...distractors);
+  let distractorIndex = 0;
+  const filledTiles = Array.from({ length: tiles.length }, (_, index) => {
+    const tile = tiles[index];
+    if (tile) return tile;
+    const distractor = distractors[distractorIndex % distractors.length];
+    distractorIndex += 1;
+    return distractor ?? 'A';
+  });
+
   for (const item of targets) {
-    if (!canBuildWordFromRack(tiles, item.tokens)) {
+    if (!canBuildWordFromRack(filledTiles, item.tokens)) {
       throw new Error(`Pllakat nuk e përmbajnë fjalën e synuar: ${item.word}`);
     }
   }
 
-  return { id, title, clue, tiles, targets };
+  return { id, title, clue, gridSize, tiles: filledTiles, targets };
 }
 
 // Headwords were checked against Fjalori i Gjuhës së Sotme Shqipe:

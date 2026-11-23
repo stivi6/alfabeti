@@ -17,18 +17,9 @@ interface ConnectState {
   score: number;
 }
 
-function shuffleTiles(tiles: readonly string[]): string[] {
-  const shuffled = [...tiles];
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex]!, shuffled[index]!];
-  }
-  return shuffled;
-}
-
 function createState(puzzleIndex = 0): ConnectState {
   const puzzle = CONNECT_PUZZLES[puzzleIndex]!;
-  return { puzzleId: puzzle.id, found: [], tiles: shuffleTiles(puzzle.tiles), score: 0 };
+  return { puzzleId: puzzle.id, found: [], tiles: [...puzzle.tiles], score: 0 };
 }
 
 function isSavedState(value: ConnectState | null): value is ConnectState {
@@ -79,16 +70,19 @@ export function LinkLettersPage() {
     }
 
     const wordKey = canonicalTokenSequence(currentTokens);
-    const target = puzzle.targets.find(
-      (item) => canonicalTokenSequence(item.tokens) === wordKey,
-    );
+    const target = puzzle.targets.find((item) => {
+      const targetKey = canonicalTokenSequence(item.tokens);
+      const reverseKey = canonicalTokenSequence([...item.tokens].reverse());
+      return targetKey === wordKey || reverseKey === wordKey;
+    });
 
     if (!target) {
       setMessage('Kjo nuk është një nga fjalët e synuara. Provo përsëri.');
       setSelectedIndices([]);
       return;
     }
-    if (foundKeys.has(wordKey)) {
+    const targetKey = canonicalTokenSequence(target.tokens);
+    if (foundKeys.has(targetKey)) {
       setMessage('Këtë fjalë e ke gjetur tashmë.');
       setSelectedIndices([]);
       return;
@@ -96,7 +90,7 @@ export function LinkLettersPage() {
 
     setState((current) => ({
       ...current,
-      found: [...current.found, wordKey],
+      found: [...current.found, targetKey],
       score: current.score + target.tokens.length * 10,
     }));
     setSelectedIndices([]);
@@ -108,6 +102,11 @@ export function LinkLettersPage() {
     const nextIndex = (currentIndex + 1) % CONNECT_PUZZLES.length;
     setState(createState(nextIndex));
     setSelectedIndices([]);
+    setMessage('');
+  }
+
+  function updateSelection(indices: number[]) {
+    setSelectedIndices(indices);
     setMessage('');
   }
 
@@ -159,11 +158,13 @@ export function LinkLettersPage() {
             <LetterConnectBoard
               tiles={state.tiles}
               selectedIndices={selectedIndices}
-              onSelectedIndicesChange={setSelectedIndices}
+              onSelectedIndicesChange={updateSelection}
               layout="grid"
+              gridColumns={puzzle.gridSize}
               ariaLabel="Pllakat e shkronjave për lidhje"
               testIdPrefix="connect-tile"
               disabled={completed}
+              onInvalidSelection={() => setMessage('Vazhdo me pllakat fqinje në një vijë të drejtë.')}
             />
           </div>
 
@@ -186,7 +187,7 @@ export function LinkLettersPage() {
             </button>
           </div>
           <p className="mt-3 text-center text-xs text-ink-muted">
-            Zvarrit mbi pllakat ose zgjidhi me radhë. Mund të përdorësh edhe Tab dhe Enter.
+            Zgjidh pllaka fqinje në vijë të drejtë, horizontalisht ose vertikalisht. Mund t’i zvarritësh ose t’i zgjedhësh me radhë.
           </p>
 
           {message && <p role="status" className="mt-4 text-center font-bold text-primary-dark">{message}</p>}

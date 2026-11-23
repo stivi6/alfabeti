@@ -22,14 +22,40 @@ function findTileIndices(tiles: readonly string[], wordTokens: readonly string[]
   });
 }
 
+function findLineIndices(tiles: readonly string[], columns: number, tokens: readonly string[]): number[] {
+  const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]] as const;
+  for (let start = 0; start < tiles.length; start += 1) {
+    for (const [rowStep, columnStep] of directions) {
+      const startRow = Math.floor(start / columns);
+      const startColumn = start % columns;
+      const indices = tokens.map((_, offset) => {
+        const row = startRow + rowStep * offset;
+        const column = startColumn + columnStep * offset;
+        return row < 0 || column < 0 || row >= columns || column >= columns
+          ? -1
+          : row * columns + column;
+      });
+      if (indices.every((index, offset) => index >= 0 && tiles[index] === tokens[offset])) {
+        return indices;
+      }
+    }
+  }
+  throw new Error(`Missing straight path for ${tokens.join('')}`);
+}
+
 async function tapTiles(page: Page, prefix: string, tiles: readonly string[], tokens: readonly string[]) {
   for (const index of findTileIndices(tiles, tokens)) {
     await page.getByTestId(`${prefix}-${index}`).click();
   }
 }
 
-async function dragTiles(page: Page, prefix: string, tiles: readonly string[], tokens: readonly string[]) {
-  const indices = findTileIndices(tiles, tokens);
+async function tapLine(page: Page, prefix: string, tiles: readonly string[], columns: number, tokens: readonly string[]) {
+  for (const index of findLineIndices(tiles, columns, tokens)) {
+    await page.getByTestId(`${prefix}-${index}`).click();
+  }
+}
+
+async function dragIndices(page: Page, prefix: string, indices: readonly number[]) {
   for (const index of indices) {
     await page.getByTestId(`${prefix}-${index}`).scrollIntoViewIfNeeded();
   }
@@ -45,6 +71,14 @@ async function dragTiles(page: Page, prefix: string, tiles: readonly string[], t
     await page.mouse.move(point.x, point.y, { steps: 6 });
   }
   await page.mouse.up();
+}
+
+async function dragTiles(page: Page, prefix: string, tiles: readonly string[], tokens: readonly string[]) {
+  await dragIndices(page, prefix, findTileIndices(tiles, tokens));
+}
+
+async function dragLine(page: Page, prefix: string, tiles: readonly string[], columns: number, tokens: readonly string[]) {
+  await dragIndices(page, prefix, findLineIndices(tiles, columns, tokens));
 }
 
 test.describe('mini-games hub', () => {
@@ -183,13 +217,19 @@ test.describe('Lidh Shkronjat', () => {
     await page.goto('/lojerat/lidh-shkronjat');
     await expect(page.getByRole('heading', { level: 1, name: puzzle.title })).toBeVisible();
 
-    await dragTiles(page, 'connect-tile', puzzle.tiles, ['F', 'A', 'J', 'L']);
+    await page.getByTestId('connect-tile-0').click();
+    await page.getByTestId(`connect-tile-${puzzle.gridSize + 1}`).click();
+    await expect(page.getByTestId('connect-word')).toHaveText(puzzle.tiles[0]!);
+    await expect(page.locator('p[role="status"]')).toContainText('pllakat fqinje');
+    await page.getByRole('button', { name: 'Pastro zgjedhjen' }).click();
+
+    await dragLine(page, 'connect-tile', puzzle.tiles, puzzle.gridSize, ['F', 'J', 'A', 'L']);
     await page.getByRole('button', { name: 'Kontrollo fjalën' }).click();
     await expect(page.getByRole('status')).toContainText('nuk është një nga fjalët');
     await expect(page.getByTestId('connect-progress')).toHaveText('0 / 4');
 
     const answer = puzzle.targets[0]!;
-    await dragTiles(page, 'connect-tile', puzzle.tiles, answer.tokens);
+    await dragLine(page, 'connect-tile', puzzle.tiles, puzzle.gridSize, answer.tokens);
     await expect(page.getByTestId('connect-tile-path')).toHaveAttribute('points', /\d+(?:\.\d+)?,\d+(?:\.\d+)? \d+(?:\.\d+)?,\d+(?:\.\d+)?/);
     await expect(page.getByTestId('connect-word')).toHaveText('FJALË');
     await page.getByRole('button', { name: 'Kontrollo fjalën' }).click();
@@ -197,9 +237,15 @@ test.describe('Lidh Shkronjat', () => {
     await expect(page.getByTestId('connect-score')).toHaveText('50');
     await expect(page.getByTestId('connect-target-0')).toContainText('fjalë');
 
+    const verticalAnswer = puzzle.targets[3]!;
+    await dragLine(page, 'connect-tile', puzzle.tiles, puzzle.gridSize, verticalAnswer.tokens);
+    await expect(page.getByTestId('connect-word')).toHaveText('SHKOLLË');
+    await page.getByRole('button', { name: 'Kontrollo fjalën' }).click();
+    await expect(page.getByTestId('connect-progress')).toHaveText('2 / 4');
+
     await page.reload();
-    await expect(page.getByTestId('connect-progress')).toHaveText('1 / 4');
-    await tapTiles(page, 'connect-tile', puzzle.tiles, answer.tokens);
+    await expect(page.getByTestId('connect-progress')).toHaveText('2 / 4');
+    await tapLine(page, 'connect-tile', puzzle.tiles, puzzle.gridSize, answer.tokens);
     await page.getByRole('button', { name: 'Kontrollo fjalën' }).click();
     await expect(page.getByRole('status')).toContainText('tashmë');
 
@@ -223,7 +269,7 @@ test.describe('Lidh Shkronjat', () => {
       await expect(page.getByRole('heading', { level: 1, name: puzzle.title })).toBeVisible();
       const tiles = await page.locator('[data-testid^="connect-tile-"][data-letter-index]').allTextContents();
       for (const [targetIndex, target] of puzzle.targets.entries()) {
-        await tapTiles(page, 'connect-tile', tiles, target.tokens);
+        await tapLine(page, 'connect-tile', tiles, puzzle.gridSize, target.tokens);
         await expect(page.getByTestId('connect-word')).toHaveText(target.tokens.join(''));
         await page.getByRole('button', { name: 'Kontrollo fjalën' }).click();
         await expect(page.getByTestId('connect-progress')).toHaveText(`${targetIndex + 1} / ${puzzle.targets.length}`);

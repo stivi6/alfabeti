@@ -456,18 +456,9 @@ interface ConnectState {
   score: number;
 }
 
-function shuffleTiles(tiles: readonly string[]): string[] {
-  const shuffled = [...tiles];
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex]!, shuffled[index]!];
-  }
-  return shuffled;
-}
-
 function createState(puzzleIndex = 0): ConnectState {
   const puzzle = CONNECT_PUZZLES[puzzleIndex]!;
-  return { puzzleId: puzzle.id, found: [], tiles: shuffleTiles(puzzle.tiles), score: 0 };
+  return { puzzleId: puzzle.id, found: [], tiles: [...puzzle.tiles], score: 0 };
 }
 
 function isSavedState(value: ConnectState | null): value is ConnectState {
@@ -518,16 +509,19 @@ export function LinkLettersPage() {
     }
 
     const wordKey = canonicalTokenSequence(currentTokens);
-    const target = puzzle.targets.find(
-      (item) => canonicalTokenSequence(item.tokens) === wordKey,
-    );
+    const target = puzzle.targets.find((item) => {
+      const targetKey = canonicalTokenSequence(item.tokens);
+      const reverseKey = canonicalTokenSequence([...item.tokens].reverse());
+      return targetKey === wordKey || reverseKey === wordKey;
+    });
 
     if (!target) {
       setMessage('Kjo nuk është një nga fjalët e synuara. Provo përsëri.');
       setSelectedIndices([]);
       return;
     }
-    if (foundKeys.has(wordKey)) {
+    const targetKey = canonicalTokenSequence(target.tokens);
+    if (foundKeys.has(targetKey)) {
       setMessage('Këtë fjalë e ke gjetur tashmë.');
       setSelectedIndices([]);
       return;
@@ -535,7 +529,7 @@ export function LinkLettersPage() {
 
     setState((current) => ({
       ...current,
-      found: [...current.found, wordKey],
+      found: [...current.found, targetKey],
       score: current.score + target.tokens.length * 10,
     }));
     setSelectedIndices([]);
@@ -547,6 +541,11 @@ export function LinkLettersPage() {
     const nextIndex = (currentIndex + 1) % CONNECT_PUZZLES.length;
     setState(createState(nextIndex));
     setSelectedIndices([]);
+    setMessage('');
+  }
+
+  function updateSelection(indices: number[]) {
+    setSelectedIndices(indices);
     setMessage('');
   }
 
@@ -598,11 +597,13 @@ export function LinkLettersPage() {
             <LetterConnectBoard
               tiles={state.tiles}
               selectedIndices={selectedIndices}
-              onSelectedIndicesChange={setSelectedIndices}
+              onSelectedIndicesChange={updateSelection}
               layout="grid"
+              gridColumns={puzzle.gridSize}
               ariaLabel="Pllakat e shkronjave për lidhje"
               testIdPrefix="connect-tile"
               disabled={completed}
+              onInvalidSelection={() => setMessage('Vazhdo me pllakat fqinje në një vijë të drejtë.')}
             />
           </div>
 
@@ -625,7 +626,7 @@ export function LinkLettersPage() {
             </button>
           </div>
           <p className="mt-3 text-center text-xs text-ink-muted">
-            Zvarrit mbi pllakat ose zgjidhi me radhë. Mund të përdorësh edhe Tab dhe Enter.
+            Zgjidh pllaka fqinje në vijë të drejtë, horizontalisht ose vertikalisht. Mund t’i zvarritësh ose t’i zgjedhësh me radhë.
           </p>
 
           {message && <p role="status" className="mt-4 text-center font-bold text-primary-dark">{message}</p>}
@@ -909,9 +910,11 @@ interface LetterConnectBoardProps {
   selectedIndices: readonly number[];
   onSelectedIndicesChange: (indices: number[]) => void;
   layout: BoardLayout;
+  gridColumns?: number;
   ariaLabel: string;
   testIdPrefix: string;
   disabled?: boolean;
+  onInvalidSelection?: () => void;
 }
 
 interface Point {
@@ -932,9 +935,11 @@ export function LetterConnectBoard({
   selectedIndices,
   onSelectedIndicesChange,
   layout,
+  gridColumns,
   ariaLabel,
   testIdPrefix,
   disabled = false,
+  onInvalidSelection,
 }: LetterConnectBoardProps) {
   const boardRef = useRef<HTMLDivElement>(null);
   const pointerIdRef = useRef<number | null>(null);
@@ -976,11 +981,16 @@ export function LetterConnectBoard({
   const selectIndex = useCallback((index: number) => {
     if (disabled) return;
     if (!Number.isInteger(index) || index < 0 || index >= tiles.length) return;
-    if (selectedRef.current.includes(index)) return;
-    const next = [...selectedRef.current, index];
+    const selected = selectedRef.current;
+    if (selected.includes(index)) return;
+    if (layout === 'grid' && gridColumns && !continuesGridLine(selected, index, gridColumns)) {
+      onInvalidSelection?.();
+      return;
+    }
+    const next = [...selected, index];
     selectedRef.current = next;
     onSelectedIndicesChange(next);
-  }, [disabled, onSelectedIndicesChange, tiles.length]);
+  }, [disabled, gridColumns, layout, onInvalidSelection, onSelectedIndicesChange, tiles.length]);
 
   const tileAtPoint = useCallback((clientX: number, clientY: number) => {
     const board = boardRef.current;
@@ -1060,14 +1070,17 @@ export function LetterConnectBoard({
       ref={boardRef}
       role="group"
       aria-label={ariaLabel}
-      className={`relative mx-auto touch-none select-none overflow-hidden rounded-[28px] border border-border bg-primary-soft/35 ${layout === 'circle' ? 'aspect-square w-full max-w-[430px]' : 'w-full p-5'}`}
+      className={`relative mx-auto touch-none select-none overflow-hidden rounded-[28px] border border-border bg-primary-soft/35 ${layout === 'circle' ? 'aspect-square w-full max-w-[430px]' : 'aspect-square w-full max-w-[620px] p-2 sm:p-4'}`}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={finishPointer}
       onPointerCancel={finishPointer}
     >
       {layout === 'grid' && (
-        <div className="grid grid-cols-4 gap-3 sm:grid-cols-6">
+        <div
+          className="grid gap-2 sm:gap-3"
+          style={{ gridTemplateColumns: `repeat(${gridColumns ?? 1}, minmax(0, 1fr))` }}
+        >
           {tiles.map((tile, index) => (
             <LetterTile
               key={`${tile}-${index}`}
@@ -1144,11 +1157,29 @@ function LetterTile({ tile, index, selected, testId, onSelect, disabled = false,
       disabled={disabled}
       onClick={() => onSelect(index)}
       style={style}
-      className={`grid size-14 place-items-center rounded-2xl border-2 text-lg font-extrabold shadow-sm transition sm:size-[68px] ${style ? 'absolute' : ''} ${selected ? 'z-10 border-primary bg-primary text-white shadow-lifted' : 'border-border bg-surface text-ink hover:border-primary/60'}`}
+      className={`grid place-items-center rounded-2xl border-2 text-sm font-extrabold shadow-sm transition sm:text-lg ${style ? 'absolute size-14 sm:size-[68px]' : 'aspect-square w-full min-w-0'} ${selected ? 'z-10 border-primary bg-primary text-white shadow-lifted' : 'border-border bg-surface text-ink hover:border-primary/60'}`}
     >
       {tile}
     </button>
   );
+}
+
+function continuesGridLine(selected: readonly number[], next: number, columns: number): boolean {
+  if (selected.length === 0) return true;
+
+  const previous = selected[selected.length - 1]!;
+  const rowDelta = Math.floor(next / columns) - Math.floor(previous / columns);
+  const columnDelta = (next % columns) - (previous % columns);
+
+  if (selected.length === 1) {
+    return Math.abs(rowDelta) + Math.abs(columnDelta) === 1;
+  }
+
+  const first = selected[0]!;
+  const second = selected[1]!;
+  const rowStep = Math.floor(second / columns) - Math.floor(first / columns);
+  const columnStep = (second % columns) - (first % columns);
+  return rowDelta === rowStep && columnDelta === columnStep;
 }
 ````
 
@@ -1263,6 +1294,7 @@ export interface ConnectPuzzle {
   id: string;
   title: string;
   clue: string;
+  gridSize: number;
   tiles: string[];
   targets: ConnectTarget[];
 }
@@ -1281,26 +1313,39 @@ function createPuzzle(
   targets: ConnectTarget[],
   distractors: string[],
 ): ConnectPuzzle {
-  const maxCounts = new Map<string, number>();
-  for (const item of targets) {
-    const wordCounts = new Map<string, number>();
-    for (const token of item.tokens) {
-      wordCounts.set(token, (wordCounts.get(token) ?? 0) + 1);
-    }
-    for (const [token, count] of wordCounts) {
-      maxCounts.set(token, Math.max(maxCounts.get(token) ?? 0, count));
-    }
+  const longestWord = Math.max(...targets.map((item) => item.tokens.length));
+  const gridSize = Math.max(6, targets.length + 1, longestWord + 1);
+  const tiles: Array<string | undefined> = Array(gridSize * gridSize);
+
+  targets.slice(0, -1).forEach((item, row) => {
+    item.tokens.forEach((token, column) => {
+      tiles[row * gridSize + column] = token;
+    });
+  });
+
+  const verticalTarget = targets.at(-1);
+  if (verticalTarget) {
+    verticalTarget.tokens.forEach((token, row) => {
+      tiles[row * gridSize + gridSize - 1] = token;
+    });
   }
 
-  const tiles = [...maxCounts].flatMap(([token, count]) => Array<string>(count).fill(token));
-  tiles.push(...distractors);
+  let distractorIndex = 0;
+  const filledTiles = Array.from({ length: tiles.length }, (_, index) => {
+    const tile = tiles[index];
+    if (tile) return tile;
+    const distractor = distractors[distractorIndex % distractors.length];
+    distractorIndex += 1;
+    return distractor ?? 'A';
+  });
+
   for (const item of targets) {
-    if (!canBuildWordFromRack(tiles, item.tokens)) {
+    if (!canBuildWordFromRack(filledTiles, item.tokens)) {
       throw new Error(`Pllakat nuk e përmbajnë fjalën e synuar: ${item.word}`);
     }
   }
 
-  return { id, title, clue, tiles, targets };
+  return { id, title, clue, gridSize, tiles: filledTiles, targets };
 }
 
 // Headwords were checked against Fjalori i Gjuhës së Sotme Shqipe:
