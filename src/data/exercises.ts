@@ -1,13 +1,5 @@
 import type { Exercise } from '../exercises/types';
-
-export const ALBANIAN_ALPHABET = [
-  'A', 'B', 'C', 'Ç', 'D', 'DH', 'E', 'Ë', 'F', 'G', 'GJ', 'H', 'I', 'J', 'K',
-  'L', 'LL', 'M', 'N', 'NJ', 'O', 'P', 'Q', 'R', 'RR', 'S', 'SH', 'T', 'TH',
-  'U', 'V', 'X', 'XH', 'Y', 'Z', 'ZH',
-] as const;
-
-export const DIGRAPHS = ['DH', 'GJ', 'LL', 'NJ', 'RR', 'SH', 'TH', 'XH', 'ZH'] as const;
-export const VOWELS = ['A', 'E', 'Ë', 'I', 'O', 'U', 'Y'] as const;
+export { ALBANIAN_ALPHABET, DIGRAPHS, VOWELS } from '../lib/albanianLetters';
 
 export const EXERCISES: Exercise[] = [
   {

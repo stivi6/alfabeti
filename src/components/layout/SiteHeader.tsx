@@ -65,10 +65,10 @@ export function SiteHeader({ variant = 'home', children }: SiteHeaderProps) {
                 Si funksionon
               </a>
               <a
-                href="#pse-festojme"
+                href="#historia"
                 className="text-sm font-semibold text-ink-muted transition-colors hover:text-ink"
               >
-                Pse festojmë?
+                Historia
               </a>
             </nav>
             <div className="hidden md:block">
@@ -119,11 +119,11 @@ export function SiteHeader({ variant = 'home', children }: SiteHeaderProps) {
               Si funksionon
             </a>
             <a
-              href="#pse-festojme"
+              href="#historia"
               className="flex min-h-11 items-center rounded-xl px-3 text-sm font-semibold text-ink-muted hover:bg-lilac hover:text-ink"
               onClick={() => setMenuOpen(false)}
             >
-              Pse festojmë?
+              Historia
             </a>
           </nav>
           <Link

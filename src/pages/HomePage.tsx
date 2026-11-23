@@ -6,6 +6,7 @@ import { PageLayout } from '../components/layout/PageLayout';
 import { Badge } from '../components/ui/Badge';
 import { buttonClasses } from '../components/ui/buttonStyles';
 import { cn } from '../lib/cn';
+import { TIMELINE_EVENTS } from '../data/timelineEvents';
 
 const GAME_ICONS = [Languages, BookOpen, History];
 
@@ -29,7 +30,7 @@ export function HomePage() {
                 Eksploro kuizet dhe provo tri lojërat me fjalë për Ditën e Alfabetit.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link to="/timeline" className={buttonClasses('primary', 'lg', 'group sm:min-w-[210px]')}>
+                <Link to="/#historia" className={buttonClasses('primary', 'lg', 'group sm:min-w-[210px]')}>
                   Eksploro historinë
                   <ArrowRight size={19} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
@@ -141,6 +142,37 @@ export function HomePage() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="historia" aria-labelledby="history-heading" className="scroll-mt-24 border-y border-border bg-surface/55 py-16 sm:py-20 lg:py-24">
+        <div className="page-container">
+          <div className="max-w-3xl">
+            <p className="eyebrow">Rrugëtimi i shkrimit shqip</p>
+            <h2 id="history-heading" className="mt-3 text-[clamp(2rem,4vw,2.9rem)]">
+              Nga dëshmitë e hershme te drejtshkrimi i njësuar
+            </h2>
+            <p className="mt-4 leading-relaxed text-ink-muted">
+              Një përmbledhje e momenteve që ndihmuan në dokumentimin, mësimin dhe njësimin e shkrimit shqip.
+            </p>
+          </div>
+
+          <ol className="relative mt-10 space-y-4 before:absolute before:bottom-6 before:left-[45px] before:top-6 before:w-px before:bg-primary/25 sm:mt-12 sm:space-y-5 sm:before:left-[91px]">
+            {TIMELINE_EVENTS.map((item) => (
+              <li key={`${item.year}-${item.title}`} className="relative grid grid-cols-[76px_1fr] gap-4 sm:grid-cols-[150px_1fr] sm:gap-6">
+                <div className="relative flex justify-center pt-5">
+                  <span className="absolute left-[40px] top-7 z-10 size-3 rounded-full border-[3px] border-bg bg-primary sm:left-[86px]" aria-hidden="true" />
+                  <span className="font-display text-xl font-extrabold text-primary sm:text-2xl">{item.year}</span>
+                </div>
+                <article className="rounded-2xl border border-border bg-surface p-4 shadow-soft sm:rounded-[22px] sm:p-6">
+                  <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-primary">{item.date}</p>
+                  <h3 className="mt-2 text-lg sm:text-xl">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-ink-muted sm:text-base">{item.text}</p>
+                  <p className="mt-3 text-xs leading-relaxed text-ink-muted/80">Burimi: {item.source}</p>
+                </article>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 

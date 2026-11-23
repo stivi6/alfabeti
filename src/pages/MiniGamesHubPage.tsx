@@ -5,8 +5,8 @@ import { buttonClasses } from '../components/ui/buttonStyles';
 
 const games = [
   { to: '/lojerat/wordle', title: 'Wordle Shqip', text: 'Gjeje fjalën me pesë shkronja në gjashtë tentativa.', icon: Grid3X3 },
-  { to: '/lojerat/lidh-shkronjat', title: 'Lidh Shkronjat', text: 'Lidh çdo shkronjë me tingullin ose kombinimin e duhur.', icon: Link2 },
-  { to: '/lojerat/gjej-fjalët', title: 'Gjej Fjalët', text: 'Gjej fjalët shqipe në tabelën e shkronjave.', icon: Search },
+  { to: '/lojerat/lidh-shkronjat', title: 'Lidh Shkronjat', text: 'Lidh pllakat dhe krijo fjalët që përputhen me të dhënat.', icon: Link2 },
+  { to: '/lojerat/gjej-fjalët', title: 'Gjej Fjalët', text: 'Lidh pesë shkronja në radhë të ndryshme për të zbuluar fjalë shqipe.', icon: Search },
   { to: '/lojerat/kuizi-i-gjuhes', title: 'Kuizi i Gjuhës', text: 'Drejtshkrim, rasat, foljet dhe pikësimi.', icon: Puzzle },
   { to: '/lojerat/kuizi-i-historise', title: 'Kuizi i Historisë', text: 'Rrugëtimi i alfabetit dhe Kongresi i Manastirit.', icon: Sparkles },
 ];
