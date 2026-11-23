@@ -1,0 +1,30 @@
+--- launch/raw/00-intro.webm
+{"file": "launch/raw/00-intro.webm", "fps": 25, "markerStart": 0.0, "markerEnd": 0.16, "redFrames": [0, 1, 2, 3], "duration": 7.92}
+--- launch/raw/01-home.webm
+{"file": "launch/raw/01-home.webm", "fps": 25, "markerStart": 4.68, "markerEnd": 4.84, "redFrames": [117, 118, 119, 120], "duration": 16.04}
+--- launch/raw/02-roadmap.webm
+{"file": "launch/raw/02-roadmap.webm", "fps": 25, "markerStart": 3.24, "markerEnd": 3.48, "redFrames": [81, 82, 83, 84, 85, 86], "duration": 11.12}
+--- launch/raw/03-exercise.webm
+{"file": "launch/raw/03-exercise.webm", "fps": 25, "markerStart": 37.32, "markerEnd": 37.56, "redFrames": [933, 934, 935, 936, 937, 938], "duration": 59.24}
+--- launch/raw/04-montage-numbers.webm
+{"file": "launch/raw/04-montage-numbers.webm", "fps": 25, "markerStart": 2.92, "markerEnd": 3.16, "redFrames": [73, 74, 75, 76, 77, 78], "duration": 7.0}
+--- launch/raw/05-montage-colors.webm
+{"file": "launch/raw/05-montage-colors.webm", "fps": 25, "markerStart": 1.96, "markerEnd": 2.2, "redFrames": [49, 50, 51, 52, 53, 54], "duration": 6.0}
+--- launch/raw/06-montage-articles.webm
+{"file": "launch/raw/06-montage-articles.webm", "fps": 25, "markerStart": 2.24, "markerEnd": 2.48, "redFrames": [56, 57, 58, 59, 60, 61], "duration": 6.24}
+--- launch/raw/07-montage-cafe.webm
+{"file": "launch/raw/07-montage-cafe.webm", "fps": 25, "markerStart": 2.0, "markerEnd": 2.24, "redFrames": [50, 51, 52, 53, 54, 55], "duration": 5.92}
+--- launch/raw/08-results.webm
+{"file": "launch/raw/08-results.webm", "fps": 25, "markerStart": 3.32, "markerEnd": 3.44, "redFrames": [83, 84, 85], "duration": 11.16}
+--- launch/raw/09-review.webm
+{"file": "launch/raw/09-review.webm", "fps": 25, "markerStart": 1.6, "markerEnd": 1.84, "redFrames": [40, 41, 42, 43, 44, 45], "duration": 9.44}
+--- launch/raw/10-reset.webm
+{"file": "launch/raw/10-reset.webm", "fps": 25, "markerStart": 24.28, "markerEnd": 24.44, "redFrames": [607, 608, 609, 610], "duration": 31.52}
+--- launch/raw/11-mobile.webm
+{"file": "launch/raw/11-mobile.webm", "fps": 25, "markerStart": 0.0, "markerEnd": 0.12, "redFrames": [0, 1, 2], "duration": 9.68}
+--- launch/raw/12-outro.webm
+{"file": "launch/raw/12-outro.webm", "fps": 25, "markerStart": 0.0, "markerEnd": 0.16, "redFrames": [0, 1, 2, 3], "duration": 8.88}
+--- launch/raw/calibrate.webm
+{"file": "launch/raw/calibrate.webm", "fps": 25, "markerStart": 3.2, "markerEnd": 3.32, "redFrames": [80, 81, 82], "duration": 8.44}
+--- launch/raw/test.webm
+{"file": "launch/raw/test.webm", "fps": 25, "markerStart": null, "markerEnd": null, "redFrames": [], "duration": 7.32}

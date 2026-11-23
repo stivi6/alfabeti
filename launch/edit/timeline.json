@@ -1,0 +1,70 @@
+{
+  "starts": [
+    {
+      "name": "intro",
+      "start": 0.0,
+      "duration": 5.8
+    },
+    {
+      "name": "home",
+      "start": 5.0,
+      "duration": 10.4
+    },
+    {
+      "name": "roadmap",
+      "start": 15.1,
+      "duration": 7.2
+    },
+    {
+      "name": "exercise",
+      "start": 22.0,
+      "duration": 21.5
+    },
+    {
+      "name": "montage-numbers",
+      "start": 43.46,
+      "duration": 2.6
+    },
+    {
+      "name": "montage-colors",
+      "start": 45.94,
+      "duration": 2.5
+    },
+    {
+      "name": "montage-articles",
+      "start": 48.32,
+      "duration": 2.5
+    },
+    {
+      "name": "montage-cafe",
+      "start": 50.7,
+      "duration": 2.5
+    },
+    {
+      "name": "results",
+      "start": 52.9,
+      "duration": 7.0
+    },
+    {
+      "name": "review",
+      "start": 59.6,
+      "duration": 6.7
+    },
+    {
+      "name": "reset",
+      "start": 66.0,
+      "duration": 6.8
+    },
+    {
+      "name": "mobile",
+      "start": 72.76,
+      "duration": 6.8
+    },
+    {
+      "name": "outro",
+      "start": 78.76,
+      "duration": 6.6
+    }
+  ],
+  "total": 85.36
+}

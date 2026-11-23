@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DeutschQuest Intro</title>
+<style>
+  @font-face { font-family: 'Nunito Sans'; src: url('./assets/fonts/NunitoSans-800.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: block; }
+  @font-face { font-family: 'Nunito Sans'; src: url('./assets/fonts/NunitoSans-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
+  @font-face { font-family: 'DM Sans'; src: url('./assets/fonts/DMSans-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
+  @font-face { font-family: 'DM Sans'; src: url('./assets/fonts/DMSans-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
+  @font-face { font-family: 'DM Sans'; src: url('./assets/fonts/DMSans-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
+
+  :root {
+    --ink: #22182e;
+    --ink-2: #2d203d;
+    --cream: #fbf7f1;
+    --lilac: #d9c7ef;
+    --purple: #714e96;
+    --gold: #e6b862;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: var(--ink); }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--cream);
+    display: grid;
+    place-items: center;
+    position: relative;
+  }
+
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(900px 700px at 22% 18%, rgba(113,78,150,.38), transparent 68%),
+      radial-gradient(1000px 800px at 82% 88%, rgba(230,184,98,.12), transparent 64%),
+      linear-gradient(135deg, #241a31 0%, #1c1426 58%, #251a30 100%);
+  }
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .5; mix-blend-mode: screen; }
+  .orb.a { width: 520px; height: 520px; left: -160px; top: 120px; background: rgba(113,78,150,.55); animation: drift 12s ease-in-out infinite alternate; }
+  .orb.b { width: 420px; height: 420px; right: -100px; bottom: -80px; background: rgba(230,184,98,.22); animation: drift 15s ease-in-out infinite alternate-reverse; }
+  @keyframes drift { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(40px,-30px,0) scale(1.08); } }
+
+  .grain {
+    position: absolute; inset: 0; opacity: .055; pointer-events: none; mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 52%, rgba(10,6,16,.5) 100%); }
+
+  main {
+    position: relative; z-index: 2; text-align: center; padding: 0 120px;
+    animation: breathe 9s ease-in-out infinite alternate;
+  }
+  @keyframes breathe { from { transform: scale(1); } to { transform: scale(1.012); } }
+
+  .mark {
+    width: 92px; height: 92px; margin: 0 auto 28px; display: block;
+    filter: drop-shadow(0 18px 30px rgba(0,0,0,.35));
+    opacity: 0; animation: markIn 1s cubic-bezier(.2,.8,.2,1) .25s forwards;
+  }
+  @keyframes markIn { from { opacity: 0; transform: translateY(14px) scale(.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+  .wordmark {
+    font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 86px; line-height: .95;
+    letter-spacing: -.02em; margin: 0 0 30px;
+    opacity: 0; animation: rise 1s cubic-bezier(.2,.8,.2,1) .5s forwards;
+  }
+  .wordmark span { color: var(--lilac); }
+
+  h1 {
+    font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 66px; line-height: 1.03;
+    letter-spacing: -.025em; margin: 0 0 26px;
+  }
+  h1 .line { display: block; opacity: 0; transform: translateY(18px); animation: rise 1s cubic-bezier(.2,.8,.2,1) forwards; }
+  h1 .line:nth-child(1) { animation-delay: .9s; }
+  h1 .line:nth-child(2) { animation-delay: 1.08s; }
+  h1 em { font-style: normal; color: var(--gold); }
+
+  .tagline {
+    font-size: 24px; color: rgba(251,247,241,.7); letter-spacing: .01em; margin: 0 0 34px;
+    opacity: 0; animation: rise 1s ease 1.4s forwards;
+  }
+  .rule {
+    width: 74px; height: 2px; background: var(--gold); margin: 0 auto 26px; border-radius: 999px;
+    transform: scaleX(0); animation: lineIn .9s cubic-bezier(.2,.8,.2,1) 1.7s forwards;
+  }
+  .meta {
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: .24em;
+    text-transform: uppercase; color: rgba(251,247,241,.52);
+    opacity: 0; animation: rise .9s ease 1.9s forwards;
+  }
+  .meta b { color: var(--gold); font-weight: 600; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes lineIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="orb a"></div>
+  <div class="orb b"></div>
+  <div class="grain"></div>
+  <div class="vignette"></div>
+  <main>
+    <img class="mark" src="./assets/brand/deutschquest-mark.svg" alt="" />
+    <div class="wordmark">Deutsch<span>Quest</span></div>
+    <h1><span class="line">Learn German.</span><span class="line"><em>Play your way.</em></span></h1>
+    <p class="tagline">Mëso gjermanisht. Luaj sipas mënyrës tënde.</p>
+    <div class="rule"></div>
+    <p class="meta"><b>3</b> chapters &nbsp;·&nbsp; <b>15</b> challenges &nbsp;·&nbsp; one adventure</p>
+  </main>
+</body>
+</html>

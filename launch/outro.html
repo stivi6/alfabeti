@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DeutschQuest Outro</title>
+<style>
+  @font-face { font-family: 'Nunito Sans'; src: url('./assets/fonts/NunitoSans-800.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: block; }
+  @font-face { font-family: 'Nunito Sans'; src: url('./assets/fonts/NunitoSans-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
+  @font-face { font-family: 'DM Sans'; src: url('./assets/fonts/DMSans-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
+  @font-face { font-family: 'DM Sans'; src: url('./assets/fonts/DMSans-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
+  @font-face { font-family: 'DM Sans'; src: url('./assets/fonts/DMSans-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
+  @font-face { font-family: 'DM Sans'; src: url('./assets/fonts/DMSans-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
+
+  :root {
+    --ink: #1c1426;
+    --cream: #fbf7f1;
+    --lilac: #d9c7ef;
+    --purple: #714e96;
+    --gold: #e6b862;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: var(--ink); }
+  body { font-family: 'DM Sans', sans-serif; color: var(--cream); display: grid; place-items: center; position: relative; }
+
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(900px 700px at 24% 20%, rgba(113,78,150,.40), transparent 68%),
+      radial-gradient(900px 760px at 80% 86%, rgba(230,184,98,.14), transparent 64%),
+      linear-gradient(140deg, #241a31 0%, #1a1324 55%, #251a30 100%);
+  }
+  .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .5; mix-blend-mode: screen; }
+  .orb.a { width: 560px; height: 560px; left: -170px; top: 80px; background: rgba(113,78,150,.55); animation: drift 14s ease-in-out infinite alternate; }
+  .orb.b { width: 480px; height: 480px; right: -130px; bottom: -120px; background: rgba(230,184,98,.20); animation: drift 17s ease-in-out infinite alternate-reverse; }
+  @keyframes drift { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(44px,-32px,0) scale(1.08); } }
+  .grain { position: absolute; inset: 0; opacity: .055; pointer-events: none; mix-blend-mode: soft-light; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 50%, rgba(10,6,16,.55) 100%); }
+
+  main { position: relative; z-index: 2; text-align: center; padding: 0 100px; }
+  .mark { width: 82px; height: 82px; margin: 0 auto 22px; display: block; filter: drop-shadow(0 18px 30px rgba(0,0,0,.4)); opacity: 0; animation: rise .9s cubic-bezier(.2,.8,.2,1) .15s forwards; }
+  .wordmark { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 60px; line-height: 1; letter-spacing: -.02em; margin: 0 0 42px; opacity: 0; animation: rise .9s cubic-bezier(.2,.8,.2,1) .3s forwards; }
+  .wordmark span { color: var(--lilac); }
+
+  h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 58px; line-height: 1.04; letter-spacing: -.025em; margin: 0 0 38px; }
+  h1 .line { display: block; opacity: 0; transform: translateY(16px); animation: rise .9s cubic-bezier(.2,.8,.2,1) forwards; }
+  h1 .line:nth-child(1) { animation-delay: .75s; }
+  h1 .line:nth-child(2) { animation-delay: .9s; }
+  h1 em { font-style: normal; color: var(--gold); }
+
+  .cta {
+    display: inline-flex; align-items: center; gap: 18px;
+    padding: 22px 36px 22px 40px; border-radius: 999px;
+    background: linear-gradient(135deg, #edc576, var(--gold));
+    color: #2b1d12; text-decoration: none;
+    font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -.01em;
+    box-shadow: 0 20px 50px rgba(230,184,98,.25), inset 0 1px 0 rgba(255,255,255,.5);
+    opacity: 0; transform: translateY(16px) scale(.96); animation: pop .9s cubic-bezier(.2,.8,.2,1) 1.15s forwards;
+  }
+  .cta .arrow { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 32px; transition: transform .3s ease; }
+  .cta:hover .arrow { transform: translateX(4px); }
+
+  .meta {
+    margin: 34px 0 0; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px;
+    letter-spacing: .22em; text-transform: uppercase; color: rgba(251,247,241,.56);
+    opacity: 0; animation: rise .8s ease 1.65s forwards;
+  }
+  .meta b { color: var(--gold); font-weight: 700; }
+  .tagline { margin: 18px 0 0; font-size: 19px; color: rgba(251,247,241,.62); opacity: 0; animation: rise .8s ease 1.85s forwards; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pop { from { opacity: 0; transform: translateY(16px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="orb a"></div>
+  <div class="orb b"></div>
+  <div class="grain"></div>
+  <div class="vignette"></div>
+  <main>
+    <img class="mark" src="./assets/brand/deutschquest-mark.svg" alt="" />
+    <div class="wordmark">Deutsch<span>Quest</span></div>
+    <h1><span class="line">Your next adventure</span><span class="line"><em>starts here.</em></span></h1>
+    <div class="cta">hgquest.vercel.app <span class="arrow">→</span></div>
+    <p class="meta"><b>Free</b> &nbsp;·&nbsp; no sign-up &nbsp;·&nbsp; <b>45</b> prompts</p>
+    <p class="tagline">Mëso gjermanisht. Luaj sipas mënyrës tënde.</p>
+  </main>
+</body>
+</html>

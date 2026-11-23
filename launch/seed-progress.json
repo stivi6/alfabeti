@@ -1,0 +1,292 @@
+{
+  "version": 1,
+  "exercises": {
+    "c1-e1": {
+      "completed": true,
+      "bestCorrect": 2,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "Përshëndetje!",
+          "correct": true
+        },
+        {
+          "submitted": "Përshëndetje!",
+          "correct": false
+        },
+        {
+          "submitted": "Mirupafshim!",
+          "correct": true
+        }
+      ]
+    },
+    "c1-e2": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "apple",
+          "correct": true
+        },
+        {
+          "submitted": "book",
+          "correct": true
+        },
+        {
+          "submitted": "house",
+          "correct": true
+        }
+      ]
+    },
+    "c1-e3": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "1",
+          "correct": true
+        },
+        {
+          "submitted": "3",
+          "correct": true
+        },
+        {
+          "submitted": "8",
+          "correct": true
+        }
+      ]
+    },
+    "c1-e4": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "E kuqe",
+          "correct": true
+        },
+        {
+          "submitted": "E kaltër",
+          "correct": true
+        },
+        {
+          "submitted": "E gjelbër",
+          "correct": true
+        }
+      ]
+    },
+    "c1-e5": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "Morgen",
+          "correct": true
+        },
+        {
+          "submitted": "du",
+          "correct": true
+        },
+        {
+          "submitted": "aus",
+          "correct": true
+        }
+      ]
+    },
+    "c2-e1": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "der",
+          "correct": true
+        },
+        {
+          "submitted": "die",
+          "correct": true
+        },
+        {
+          "submitted": "das",
+          "correct": true
+        }
+      ]
+    },
+    "c2-e2": {
+      "completed": true,
+      "bestCorrect": 2,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "Ich lerne Deutsch.",
+          "correct": true
+        },
+        {
+          "submitted": "Heute ich spiele Fußball.",
+          "correct": false
+        },
+        {
+          "submitted": "Am Morgen trinke ich Wasser.",
+          "correct": true
+        }
+      ]
+    },
+    "c2-e3": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "lerne",
+          "correct": true
+        },
+        {
+          "submitted": "wohnst",
+          "correct": true
+        },
+        {
+          "submitted": "isst",
+          "correct": true
+        }
+      ]
+    },
+    "c2-e4": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "Unë zgjohem në shtatë të dielën.",
+          "correct": true
+        },
+        {
+          "submitted": "Unë shkoj në shkollë.",
+          "correct": true
+        },
+        {
+          "submitted": "Në mbrëmje bëj detyrat e shtëpisë.",
+          "correct": true
+        }
+      ]
+    },
+    "c2-e5": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "Ich heiße Mia.",
+          "correct": true
+        },
+        {
+          "submitted": "Ich komme aus Albanien.",
+          "correct": true
+        },
+        {
+          "submitted": "Mirë, faleminderit. Dhe ti?",
+          "correct": true
+        }
+      ]
+    },
+    "c3-e1": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "Einen Tee, bitte.",
+          "correct": true
+        },
+        {
+          "submitted": "Nein, danke.",
+          "correct": true
+        },
+        {
+          "submitted": "Natürlich. Das macht 8 Euro.",
+          "correct": true
+        }
+      ]
+    },
+    "c3-e2": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "Shko drejt.",
+          "correct": true
+        },
+        {
+          "submitted": "Kthehu majtas.",
+          "correct": true
+        },
+        {
+          "submitted": "Stacioni i trenit është pranë hoteli.",
+          "correct": true
+        }
+      ]
+    },
+    "c3-e3": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "habe",
+          "correct": true
+        },
+        {
+          "submitted": "sind",
+          "correct": true
+        },
+        {
+          "submitted": "hat",
+          "correct": true
+        }
+      ]
+    },
+    "c3-e4": {
+      "completed": true,
+      "bestCorrect": 2,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "Ich bin 15 Jahre alt.",
+          "correct": true
+        },
+        {
+          "submitted": "Er gehen jeden Tag zur Schule.",
+          "correct": false
+        },
+        {
+          "submitted": "Wir haben Pizza gegessen.",
+          "correct": true
+        }
+      ]
+    },
+    "c3-e5": {
+      "completed": true,
+      "bestCorrect": 3,
+      "attempts": 1,
+      "answers": [
+        {
+          "submitted": "Am Wochenende besuche ich meine Freunde.",
+          "correct": true
+        },
+        {
+          "submitted": "Wir sind am Samstag nach Berlin gefahren.",
+          "correct": true
+        },
+        {
+          "submitted": "Gehen Sie geradeaus und dann rechts.",
+          "correct": true
+        }
+      ]
+    }
+  },
+  "lastVisitedExerciseId": "c3-e5",
+  "updatedAt": "2026-11-12T07:46:54.026Z"
+}

@@ -1,0 +1,38 @@
+@theme {
+  --font-display: "Nunito Sans", "Avenir Next", "Segoe UI", sans-serif;
+  --font-body: "DM Sans", "Avenir Next", "Segoe UI", sans-serif;
+
+  --color-bg: #f7f3ec;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1ede5;
+  --color-ink: #171717;
+  --color-ink-muted: #77736d;
+  --color-primary: #c8102e;
+  --color-primary-dark: #9f0d25;
+  --color-primary-soft: #f7e6ea;
+  --color-accent: #b9975b;
+  --color-accent-soft: #f3ead7;
+  --color-success: #4f8065;
+  --color-success-soft: #e4f0e8;
+  --color-danger: #a52b38;
+  --color-danger-soft: #f8e8e6;
+  --color-border: #e6ded2;
+  --color-border-strong: #d2c7b6;
+  --color-lilac: #f8ecef;
+  --color-cream: #fbf3e4;
+  --color-mint: #edf3ef;
+  --color-gold-ink: #74591f;
+
+  --radius-card: 26px;
+  --radius-panel: 20px;
+  --radius-control: 14px;
+
+  --shadow-soft: 0 18px 45px -32px rgba(48, 38, 64, 0.42);
+  --shadow-lifted: 0 26px 60px -40px rgba(48, 38, 64, 0.55);
+}
+
+:root {
+  --focus-ring: #3c2b56;
+  --shadow-button: 0 10px 24px -14px rgba(81, 54, 111, 0.7);
+  color-scheme: light;
+}

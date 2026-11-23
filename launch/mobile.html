@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DeutschQuest Mobile</title>
+<style>
+  @font-face { font-family: 'Nunito Sans'; src: url('./assets/fonts/NunitoSans-800.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: block; }
+  @font-face { font-family: 'Nunito Sans'; src: url('./assets/fonts/NunitoSans-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
+  @font-face { font-family: 'DM Sans'; src: url('./assets/fonts/DMSans-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
+  @font-face { font-family: 'DM Sans'; src: url('./assets/fonts/DMSans-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
+  @font-face { font-family: 'DM Sans'; src: url('./assets/fonts/DMSans-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
+
+  :root {
+    --ink: #1c1426;
+    --cream: #fbf7f1;
+    --lilac: #d9c7ef;
+    --purple: #714e96;
+    --gold: #e6b862;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: var(--ink); }
+  body { font-family: 'DM Sans', sans-serif; color: var(--cream); position: relative; }
+
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(1000px 760px at 78% 42%, rgba(113,78,150,.34), transparent 66%),
+      radial-gradient(760px 640px at 94% 88%, rgba(230,184,98,.12), transparent 66%),
+      linear-gradient(135deg, #241a31 0%, #1a1324 56%, #251a30 100%);
+  }
+  .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; mix-blend-mode: screen; }
+  .orb.a { width: 520px; height: 520px; right: 80px; top: -120px; background: rgba(113,78,150,.5); animation: drift 13s ease-in-out infinite alternate; }
+  .orb.b { width: 400px; height: 400px; right: 280px; bottom: -140px; background: rgba(230,184,98,.18); animation: drift 16s ease-in-out infinite alternate-reverse; }
+  @keyframes drift { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(-36px,28px,0) scale(1.07); } }
+  .grain { position: absolute; inset: 0; opacity: .05; pointer-events: none; mix-blend-mode: soft-light; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 62% 50%, transparent 46%, rgba(10,6,16,.5) 100%); }
+
+  .copy {
+    position: absolute; left: 118px; top: 50%; transform: translateY(-50%); width: 660px; z-index: 5;
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-weight: 700; font-size: 13px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold);
+    opacity: 0; animation: rise .8s ease .15s forwards;
+  }
+  .eyebrow::before { content: ''; width: 34px; height: 2px; background: var(--gold); border-radius: 999px; }
+  h1 {
+    font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 72px; line-height: 1.01; letter-spacing: -.03em;
+    margin: 24px 0 26px;
+  }
+  h1 .line { display: block; opacity: 0; transform: translateY(18px); animation: rise .9s cubic-bezier(.2,.8,.2,1) forwards; }
+  h1 .line:nth-child(1) { animation-delay: .3s; }
+  h1 .line:nth-child(2) { animation-delay: .44s; }
+  h1 em { font-style: normal; color: var(--lilac); }
+  .sub {
+    font-size: 22px; line-height: 1.55; color: rgba(251,247,241,.72); max-width: 580px; margin: 0 0 30px;
+    opacity: 0; animation: rise .9s ease .62s forwards;
+  }
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; opacity: 0; animation: rise .9s ease .8s forwards; }
+  .chip {
+    padding: 9px 16px; border-radius: 999px; border: 1px solid rgba(251,247,241,.18);
+    font-size: 13px; font-weight: 600; letter-spacing: .1em; color: rgba(251,247,241,.66); text-transform: uppercase;
+  }
+  .chip b { color: var(--gold); }
+
+  .stage { position: absolute; right: 0; top: 0; width: 1120px; height: 100%; z-index: 3; transform-origin: 62% 50%; animation: stagein 9s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes stagein { from { transform: scale(1.028) translateY(8px); } to { transform: scale(1) translateY(0); } }
+  .glow {
+    position: absolute; width: 720px; height: 720px; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    background: radial-gradient(circle, rgba(217,199,239,.16), transparent 62%); filter: blur(10px);
+  }
+  .floor {
+    position: absolute; width: 720px; height: 90px; left: 50%; bottom: 92px; transform: translateX(-50%);
+    background: radial-gradient(ellipse, rgba(8,4,14,.62), transparent 68%); filter: blur(14px);
+  }
+
+  .phone {
+    position: absolute; width: 372px; height: 778px; border-radius: 60px;
+    background: linear-gradient(145deg, #4a4353 0%, #17131c 22%, #2b2532 52%, #0d0a12 78%, #3b3444 100%);
+    padding: 11px; box-shadow: 0 48px 90px rgba(4,2,8,.6), 0 12px 30px rgba(4,2,8,.45), inset 0 0 0 2px rgba(255,255,255,.10);
+    transform-origin: 50% 100%;
+  }
+  .phone::before { content: ''; position: absolute; inset: 4px; border-radius: 56px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); pointer-events: none; }
+  .phone .screen {
+    position: relative; width: 350px; height: 756px; border-radius: 49px; overflow: hidden; background: #fbf7f1;
+  }
+  .phone .screen img { width: 100%; height: calc(100% - 26px); margin-top: 26px; object-fit: cover; object-position: top center; display: block; }
+  .statusbar {
+    position: absolute; top: 0; left: 0; right: 0; height: 26px; z-index: 3;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px 0 22px; background: #fbf7f1; color: #322841;
+  }
+  .statusbar .time { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .01em; }
+  .statusbar .icons { display: flex; align-items: center; gap: 5px; }
+  .statusbar .icons svg { display: block; }
+  .phone .screen .glass {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(115deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 26%, rgba(255,255,255,0) 72%, rgba(255,255,255,.05) 100%);
+  }
+  .island {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    width: 96px; height: 27px; border-radius: 999px; background: #08060c; z-index: 4;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+  }
+  .island::after { content: ''; position: absolute; right: 9px; top: 8px; width: 10px; height: 10px; border-radius: 50%; background: #17121f; box-shadow: inset 0 0 2px #2f2740; }
+
+  .phone.center { left: 50%; top: 126px; transform: translateX(-50%); z-index: 4; animation: float 7s ease-in-out infinite; }
+  .phone.left { left: 50%; top: 168px; transform: translateX(-50%) translateX(-286px) rotate(-8deg) scale(.905); z-index: 3; opacity: .96; animation: float 8s ease-in-out -2.4s infinite; }
+  .phone.right { left: 50%; top: 168px; transform: translateX(-50%) translateX(286px) rotate(8deg) scale(.905); z-index: 3; opacity: .96; animation: float 8s ease-in-out -1.2s infinite; }
+  @keyframes float { 0%,100% { margin-top: 0; } 50% { margin-top: -10px; } }
+
+  .phone.center .screen img { animation: slowzoom 12s ease-in-out infinite alternate; }
+  @keyframes slowzoom { from { transform: scale(1); } to { transform: scale(1.035); } }
+
+  .side-btn { position: absolute; background: #221c29; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+  .side-btn.vol { left: -3px; top: 190px; width: 4px; height: 58px; }
+  .side-btn.vol2 { left: -3px; top: 262px; width: 4px; height: 58px; }
+  .side-btn.pwr { right: -3px; top: 232px; width: 4px; height: 92px; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="orb a"></div>
+  <div class="orb b"></div>
+  <div class="grain"></div>
+  <div class="vignette"></div>
+
+  <div class="copy">
+    <div class="eyebrow">Play anywhere</div>
+    <h1><span class="line">Small screen.</span><span class="line"><em>Full adventure.</em></span></h1>
+    <p class="sub">From 320px phones to widescreen — every chapter stays readable, touch-friendly, and fast.</p>
+    <div class="chips">
+      <span class="chip"><b>320</b> px</span>
+      <span class="chip"><b>390</b> px</span>
+      <span class="chip"><b>768</b> px</span>
+      <span class="chip"><b>1440</b> px+</span>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="glow"></div>
+    <div class="floor"></div>
+    <div class="phone left">
+      <div class="screen"><div class="statusbar"><span class="time">9:41</span><span class="icons"><svg width="17" height="11" viewBox="0 0 17 11" fill="none"><rect x="0" y="7" width="3" height="4" rx="1" fill="#322841"/><rect x="4.5" y="5" width="3" height="6" rx="1" fill="#322841"/><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="#322841"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="#322841"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 11.2 5.9 8.9a3 3 0 0 1 4.2 0L8 11.2Z" fill="#322841"/><path d="M8 7.3c-1.1 0-2.1.4-2.8 1.1L3.8 7a6 6 0 0 1 8.4 0l-1.4 1.4A4 4 0 0 0 8 7.3Z" fill="#322841"/><path d="M8 3.4c-2.2 0-4.2.9-5.7 2.3L.9 4.3A10 10 0 0 1 8 1.4c2.8 0 5.3 1.1 7.1 2.9l-1.4 1.4A8 8 0 0 0 8 3.4Z" fill="#322841"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="3.5" stroke="#322841" stroke-opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#322841"/><path d="M23 4v4a2.2 2.2 0 0 0 0-4Z" fill="#322841" fill-opacity=".45"/></svg></span></div><img src="./assets/screens/roadmap.png" alt="" /><div class="glass"></div></div>
+      <div class="island"></div>
+    </div>
+    <div class="phone right">
+      <div class="screen"><div class="statusbar"><span class="time">9:41</span><span class="icons"><svg width="17" height="11" viewBox="0 0 17 11" fill="none"><rect x="0" y="7" width="3" height="4" rx="1" fill="#322841"/><rect x="4.5" y="5" width="3" height="6" rx="1" fill="#322841"/><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="#322841"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="#322841"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 11.2 5.9 8.9a3 3 0 0 1 4.2 0L8 11.2Z" fill="#322841"/><path d="M8 7.3c-1.1 0-2.1.4-2.8 1.1L3.8 7a6 6 0 0 1 8.4 0l-1.4 1.4A4 4 0 0 0 8 7.3Z" fill="#322841"/><path d="M8 3.4c-2.2 0-4.2.9-5.7 2.3L.9 4.3A10 10 0 0 1 8 1.4c2.8 0 5.3 1.1 7.1 2.9l-1.4 1.4A8 8 0 0 0 8 3.4Z" fill="#322841"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="3.5" stroke="#322841" stroke-opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#322841"/><path d="M23 4v4a2.2 2.2 0 0 0 0-4Z" fill="#322841" fill-opacity=".45"/></svg></span></div><img src="./assets/screens/results.png" alt="" /><div class="glass"></div></div>
+      <div class="island"></div>
+    </div>
+    <div class="phone center">
+      <div class="side-btn vol"></div><div class="side-btn vol2"></div><div class="side-btn pwr"></div>
+      <div class="screen"><div class="statusbar"><span class="time">9:41</span><span class="icons"><svg width="17" height="11" viewBox="0 0 17 11" fill="none"><rect x="0" y="7" width="3" height="4" rx="1" fill="#322841"/><rect x="4.5" y="5" width="3" height="6" rx="1" fill="#322841"/><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="#322841"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="#322841"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 11.2 5.9 8.9a3 3 0 0 1 4.2 0L8 11.2Z" fill="#322841"/><path d="M8 7.3c-1.1 0-2.1.4-2.8 1.1L3.8 7a6 6 0 0 1 8.4 0l-1.4 1.4A4 4 0 0 0 8 7.3Z" fill="#322841"/><path d="M8 3.4c-2.2 0-4.2.9-5.7 2.3L.9 4.3A10 10 0 0 1 8 1.4c2.8 0 5.3 1.1 7.1 2.9l-1.4 1.4A8 8 0 0 0 8 3.4Z" fill="#322841"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="3.5" stroke="#322841" stroke-opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#322841"/><path d="M23 4v4a2.2 2.2 0 0 0 0-4Z" fill="#322841" fill-opacity=".45"/></svg></span></div><img src="./assets/screens/home.png" alt="" /><div class="glass"></div></div>
+      <div class="island"></div>
+    </div>
+  </div>
+</body>
+</html>
