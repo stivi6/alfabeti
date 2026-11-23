@@ -388,7 +388,7 @@ export function WordlePage() {
             </div>
           )}
 
-          <div className="mt-6 grid grid-cols-9 gap-1.5 sm:grid-cols-12" aria-label="Tastiera e alfabetit shqip">
+          <div className="mt-6 grid grid-cols-5 gap-1.5 min-[380px]:grid-cols-6 sm:grid-cols-8 lg:grid-cols-12" aria-label="Tastiera e alfabetit shqip">
             {ALBANIAN_ALPHABET.map((token) => (
               <button
                 key={token}
@@ -1070,7 +1070,7 @@ export function LetterConnectBoard({
       ref={boardRef}
       role="group"
       aria-label={ariaLabel}
-      className={`relative mx-auto touch-none select-none overflow-hidden rounded-[28px] border border-border bg-primary-soft/35 ${layout === 'circle' ? 'aspect-square w-full max-w-[430px]' : 'aspect-square w-full max-w-[620px] p-2 sm:p-4'}`}
+      className={`relative mx-auto touch-none select-none overflow-hidden rounded-[28px] border border-border bg-primary-soft/35 ${layout === 'circle' ? 'aspect-square w-full max-w-[430px]' : 'aspect-square w-full max-w-[620px] p-0.5 sm:p-4'}`}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={finishPointer}
@@ -1078,7 +1078,7 @@ export function LetterConnectBoard({
     >
       {layout === 'grid' && (
         <div
-          className="grid gap-2 sm:gap-3"
+          className="grid gap-0.5 sm:gap-3"
           style={{ gridTemplateColumns: `repeat(${gridColumns ?? 1}, minmax(0, 1fr))` }}
         >
           {tiles.map((tile, index) => (

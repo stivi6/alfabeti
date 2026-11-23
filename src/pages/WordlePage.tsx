@@ -269,7 +269,7 @@ export function WordlePage() {
             </div>
           )}
 
-          <div className="mt-6 grid grid-cols-9 gap-1.5 sm:grid-cols-12" aria-label="Tastiera e alfabetit shqip">
+          <div className="mt-6 grid grid-cols-5 gap-1.5 min-[380px]:grid-cols-6 sm:grid-cols-8 lg:grid-cols-12" aria-label="Tastiera e alfabetit shqip">
             {ALBANIAN_ALPHABET.map((token) => (
               <button
                 key={token}
