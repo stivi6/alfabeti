@@ -5,10 +5,17 @@ import { WORD_DICTIONARY_SOURCE, WORDLE_ALLOWED, WORDLE_ANSWERS } from '../../sr
 import {
   canBuildWordFromRack,
   canonicalTokenSequence,
+  sameTokenInventory,
   validateCuratedWord,
 } from '../../src/lib/albanianLetters';
 
 describe('Gjej Fjalët Word Connect rounds', () => {
+  it('recognizes the same Albanian tile inventory regardless of order or case', () => {
+    expect(sameTokenInventory(['SH', 'Ë', 'A', 'LL'], ['ll', 'a', 'sh', 'ë'])).toBe(true);
+    expect(sameTokenInventory(['SH', 'Ë', 'A'], ['S', 'H', 'Ë'])).toBe(false);
+    expect(sameTokenInventory(['A', 'A'], ['A', 'B'])).toBe(false);
+  });
+
   it('uses five letter tokens and at least three verified, constructible words per round', () => {
     expect(WORD_CONNECT_ROUNDS.length).toBeGreaterThanOrEqual(8);
     expect(new Set(WORD_CONNECT_ROUNDS.map((round) => round.id)).size).toBe(WORD_CONNECT_ROUNDS.length);

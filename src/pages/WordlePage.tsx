@@ -11,7 +11,7 @@ import {
 } from '../lib/albanianLetters';
 import { evaluateWordle, getKeyboardMarks, type WordleMark } from '../lib/wordleEvaluation';
 import { readGameState, writeGameState } from '../lib/localGameStorage';
-import { WORDLE_ALLOWED, WORDLE_ANSWERS } from '../data/wordleWords';
+import { WORDLE_ANSWERS } from '../data/wordleWords';
 
 const KEY = 'shkronjat-tona-wordle-v2';
 const ROUND_VERSION = 2;
@@ -24,10 +24,6 @@ interface SavedWordle {
   pendingToken: string;
   status: 'active' | 'won' | 'lost';
 }
-
-const WORDLE_ALLOWED_KEYS = new Set(
-  WORDLE_ALLOWED.map((entry) => canonicalTokenSequence(entry.tokens)),
-);
 
 function createRound(previousAnswerIndex?: number): SavedWordle {
   let answerIndex = Math.floor(Math.random() * WORDLE_ANSWERS.length);
@@ -100,11 +96,6 @@ export function WordlePage() {
     }
 
     const guessKey = canonicalTokenSequence(guess);
-    if (!WORDLE_ALLOWED_KEYS.has(guessKey)) {
-      setMessage('Kjo fjalë nuk është në fjalorin e pranuar. Provo një fjalë tjetër.');
-      return;
-    }
-
     const answer = WORDLE_ANSWERS[currentRound.answerIndex]!.tokens;
     const guesses = [...currentRound.guesses, guess];
     const won = guessKey === canonicalTokenSequence(answer);
@@ -315,7 +306,7 @@ export function WordlePage() {
             </button>
           </div>
           <p className="mt-3 text-center text-xs text-ink-muted">
-            Çdo digraf, si SH ose NJ, llogaritet si një shkronjë shqipe.
+            Çdo rresht me pesë shkronja shqipe llogaritet si përpjekje. Digrafët, si SH ose NJ, llogariten si nga një shkronjë.
           </p>
         </div>
       </section>

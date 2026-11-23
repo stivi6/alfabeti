@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 import { LetterConnectBoard } from '../components/game/LetterConnectBoard';
 import { PageLayout } from '../components/layout/PageLayout';
 import { WORD_CONNECT_ROUNDS } from '../data/wordConnectRounds';
-import { canBuildWordFromRack, canonicalTokenSequence } from '../lib/albanianLetters';
+import {
+  canBuildWordFromRack,
+  canonicalTokenSequence,
+  sameTokenInventory,
+} from '../lib/albanianLetters';
 import { readGameState, writeGameState } from '../lib/localGameStorage';
 
 const KEY = 'shkronjat-tona-word-connect-v1';
@@ -36,18 +40,6 @@ function createRound(index = 0): WordConnectState {
   };
 }
 
-function sameLetterInventory(left: readonly string[], right: readonly string[]): boolean {
-  if (left.length !== right.length) return false;
-  const counts = new Map<string, number>();
-  left.forEach((token) => counts.set(token, (counts.get(token) ?? 0) + 1));
-  for (const token of right) {
-    const count = counts.get(token) ?? 0;
-    if (count === 0) return false;
-    counts.set(token, count - 1);
-  }
-  return true;
-}
-
 function isSavedRound(value: WordConnectState | null): value is WordConnectState {
   if (!value) return false;
   const round = WORD_CONNECT_ROUNDS.find((item) => item.id === value.roundId);
@@ -55,7 +47,8 @@ function isSavedRound(value: WordConnectState | null): value is WordConnectState
     round
       && Array.isArray(value.letters)
       && value.letters.length === 5
-      && sameLetterInventory(value.letters, round.letters)
+      && value.letters.every((letter) => typeof letter === 'string')
+      && sameTokenInventory(value.letters, round.letters)
       && Array.isArray(value.found)
       && value.found.every((key) => round.words.some((word) => canonicalTokenSequence(word.tokens) === key))
       && Number.isFinite(value.score),

@@ -130,7 +130,7 @@ import {
 } from '../lib/albanianLetters';
 import { evaluateWordle, getKeyboardMarks, type WordleMark } from '../lib/wordleEvaluation';
 import { readGameState, writeGameState } from '../lib/localGameStorage';
-import { WORDLE_ALLOWED, WORDLE_ANSWERS } from '../data/wordleWords';
+import { WORDLE_ANSWERS } from '../data/wordleWords';
 
 const KEY = 'shkronjat-tona-wordle-v2';
 const ROUND_VERSION = 2;
@@ -143,10 +143,6 @@ interface SavedWordle {
   pendingToken: string;
   status: 'active' | 'won' | 'lost';
 }
-
-const WORDLE_ALLOWED_KEYS = new Set(
-  WORDLE_ALLOWED.map((entry) => canonicalTokenSequence(entry.tokens)),
-);
 
 function createRound(previousAnswerIndex?: number): SavedWordle {
   let answerIndex = Math.floor(Math.random() * WORDLE_ANSWERS.length);
@@ -219,11 +215,6 @@ export function WordlePage() {
     }
 
     const guessKey = canonicalTokenSequence(guess);
-    if (!WORDLE_ALLOWED_KEYS.has(guessKey)) {
-      setMessage('Kjo fjalë nuk është në fjalorin e pranuar. Provo një fjalë tjetër.');
-      return;
-    }
-
     const answer = WORDLE_ANSWERS[currentRound.answerIndex]!.tokens;
     const guesses = [...currentRound.guesses, guess];
     const won = guessKey === canonicalTokenSequence(answer);
@@ -434,7 +425,7 @@ export function WordlePage() {
             </button>
           </div>
           <p className="mt-3 text-center text-xs text-ink-muted">
-            Çdo digraf, si SH ose NJ, llogaritet si një shkronjë shqipe.
+            Çdo rresht me pesë shkronja shqipe llogaritet si përpjekje. Digrafët, si SH ose NJ, llogariten si nga një shkronjë.
           </p>
         </div>
       </section>
@@ -452,7 +443,7 @@ import { Link } from 'react-router-dom';
 import { LetterConnectBoard } from '../components/game/LetterConnectBoard';
 import { PageLayout } from '../components/layout/PageLayout';
 import { CONNECT_PUZZLES } from '../data/connectLetterPuzzles';
-import { canonicalTokenSequence } from '../lib/albanianLetters';
+import { canonicalTokenSequence, sameTokenInventory } from '../lib/albanianLetters';
 import { readGameState, writeGameState } from '../lib/localGameStorage';
 
 const KEY = 'shkronjat-tona-connect-v2';
@@ -482,11 +473,18 @@ function createState(puzzleIndex = 0): ConnectState {
 function isSavedState(value: ConnectState | null): value is ConnectState {
   if (!value) return false;
   const puzzle = CONNECT_PUZZLES.find((item) => item.id === value.puzzleId);
+  const validTargets = new Set(
+    puzzle?.targets.map((target) => canonicalTokenSequence(target.tokens)) ?? [],
+  );
   return Boolean(
     puzzle
       && Array.isArray(value.found)
+      && value.found.every((key) => typeof key === 'string' && validTargets.has(key))
+      && new Set(value.found).size === value.found.length
       && Array.isArray(value.tiles)
+      && value.tiles.every((tile) => typeof tile === 'string')
       && value.tiles.length === puzzle.tiles.length
+      && sameTokenInventory(value.tiles, puzzle.tiles)
       && Number.isFinite(value.score),
   );
 }
@@ -675,7 +673,11 @@ import { Link } from 'react-router-dom';
 import { LetterConnectBoard } from '../components/game/LetterConnectBoard';
 import { PageLayout } from '../components/layout/PageLayout';
 import { WORD_CONNECT_ROUNDS } from '../data/wordConnectRounds';
-import { canBuildWordFromRack, canonicalTokenSequence } from '../lib/albanianLetters';
+import {
+  canBuildWordFromRack,
+  canonicalTokenSequence,
+  sameTokenInventory,
+} from '../lib/albanianLetters';
 import { readGameState, writeGameState } from '../lib/localGameStorage';
 
 const KEY = 'shkronjat-tona-word-connect-v1';
@@ -707,18 +709,6 @@ function createRound(index = 0): WordConnectState {
   };
 }
 
-function sameLetterInventory(left: readonly string[], right: readonly string[]): boolean {
-  if (left.length !== right.length) return false;
-  const counts = new Map<string, number>();
-  left.forEach((token) => counts.set(token, (counts.get(token) ?? 0) + 1));
-  for (const token of right) {
-    const count = counts.get(token) ?? 0;
-    if (count === 0) return false;
-    counts.set(token, count - 1);
-  }
-  return true;
-}
-
 function isSavedRound(value: WordConnectState | null): value is WordConnectState {
   if (!value) return false;
   const round = WORD_CONNECT_ROUNDS.find((item) => item.id === value.roundId);
@@ -726,7 +716,8 @@ function isSavedRound(value: WordConnectState | null): value is WordConnectState
     round
       && Array.isArray(value.letters)
       && value.letters.length === 5
-      && sameLetterInventory(value.letters, round.letters)
+      && value.letters.every((letter) => typeof letter === 'string')
+      && sameTokenInventory(value.letters, round.letters)
       && Array.isArray(value.found)
       && value.found.every((key) => round.words.some((word) => canonicalTokenSequence(word.tokens) === key))
       && Number.isFinite(value.score),
@@ -1518,6 +1509,26 @@ export function canonicalAlbanian(value: string): string {
 
 export function canonicalTokenSequence(tokens: readonly string[]): string {
   return tokens.map(normalizeAlbanian).join('\u001f');
+}
+
+export function sameTokenInventory(left: readonly string[], right: readonly string[]): boolean {
+  if (left.length !== right.length) return false;
+
+  const counts = new Map<string, number>();
+  for (const token of left) {
+    const normalized = normalizeAlbanian(token);
+    if (!ALPHABET_SET.has(normalized)) return false;
+    counts.set(normalized, (counts.get(normalized) ?? 0) + 1);
+  }
+
+  for (const token of right) {
+    const normalized = normalizeAlbanian(token);
+    const count = counts.get(normalized) ?? 0;
+    if (!ALPHABET_SET.has(normalized) || count === 0) return false;
+    counts.set(normalized, count - 1);
+  }
+
+  return true;
 }
 
 export function tokenizeAlbanianWord(display: string): string[] {
@@ -2376,7 +2387,7 @@ export function cn(...classes: ClassValue[]): string {
 
 ## `public/assets/shkronjat-tona-logo.svg`
 
-````xml
+````svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 64" role="img" aria-labelledby="title desc">
   <title id="title">Shkronjat Tona</title>
   <desc id="desc">Simbol i hapur libri në kuq dhe të zezë me emrin e faqes</desc>

@@ -23,6 +23,26 @@ export function canonicalTokenSequence(tokens: readonly string[]): string {
   return tokens.map(normalizeAlbanian).join('\u001f');
 }
 
+export function sameTokenInventory(left: readonly string[], right: readonly string[]): boolean {
+  if (left.length !== right.length) return false;
+
+  const counts = new Map<string, number>();
+  for (const token of left) {
+    const normalized = normalizeAlbanian(token);
+    if (!ALPHABET_SET.has(normalized)) return false;
+    counts.set(normalized, (counts.get(normalized) ?? 0) + 1);
+  }
+
+  for (const token of right) {
+    const normalized = normalizeAlbanian(token);
+    const count = counts.get(normalized) ?? 0;
+    if (!ALPHABET_SET.has(normalized) || count === 0) return false;
+    counts.set(normalized, count - 1);
+  }
+
+  return true;
+}
+
 export function tokenizeAlbanianWord(display: string): string[] {
   const letters = Array.from(normalizeAlbanian(display));
   const tokens: string[] = [];

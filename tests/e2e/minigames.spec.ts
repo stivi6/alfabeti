@@ -129,7 +129,7 @@ test.describe('Wordle Shqip', () => {
     await expect(page.getByText('Urime, e gjete fjalën!')).toBeVisible();
   });
 
-  test('rejects invalid words without consuming a guess, persists accepted guesses, and ends after six guesses', async ({ page }) => {
+  test('accepts any five-letter guess, keeps short input in the row, persists guesses, and ends after six guesses', async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => localStorage.setItem('shkronjat-tona-wordle-v2', JSON.stringify({
       version: 2,
@@ -143,41 +143,24 @@ test.describe('Wordle Shqip', () => {
     })));
     await page.goto('/lojerat/wordle');
 
-    for (let count = 0; count < 5; count += 1) {
-      await page.getByTestId('wordle-key-Z').click();
-    }
-    await page.getByRole('button', { name: 'Kontrollo' }).click();
-    await expect(page.getByRole('status')).toContainText('nuk është në fjalorin');
-    await expect(page.getByTestId('wordle-tile-0-0')).toHaveText('Z');
-    await page.getByTestId('wordle-key-F').click();
-    await expect(page.getByTestId('wordle-tile-0-4')).toHaveText('Z');
-
-    for (let count = 0; count < 5; count += 1) {
-      await page.getByRole('button', { name: 'Fshi' }).click();
-    }
-    for (const token of WORDLE_ALLOWED.find((word) => word.display === 'drejt')!.tokens) {
+    for (const token of ['A', 'B', 'C', 'D']) {
       await page.getByTestId(`wordle-key-${token}`).click();
     }
     await page.getByRole('button', { name: 'Kontrollo' }).click();
+    await expect(page.getByRole('status')).toContainText('Plotëso pesë shkronja');
+    await expect(page.getByTestId('wordle-tile-0-0')).toHaveText('A');
+    await page.getByTestId('wordle-key-E').click();
+    await page.getByRole('button', { name: 'Kontrollo' }).click();
+    await expect(page.getByTestId('wordle-tile-0-0')).toHaveText('A');
+    await expect(page.getByTestId('wordle-tile-0-4')).toHaveText('E');
+    await expect(page.getByTestId('wordle-tile-1-0')).toHaveText('');
     await page.reload();
-    await expect(page.getByTestId('wordle-tile-0-0')).toHaveText('D');
+    await expect(page.getByTestId('wordle-tile-0-0')).toHaveText('A');
+    await expect(page.getByTestId('wordle-tile-0-4')).toHaveText('E');
 
-    await page.evaluate(() => localStorage.removeItem('shkronjat-tona-wordle-v2'));
-    await page.evaluate(() => localStorage.setItem('shkronjat-tona-wordle-v2', JSON.stringify({
-      version: 2,
-      data: {
-        answerIndex: 0,
-        guesses: [],
-        inputTokens: [],
-        pendingToken: '',
-        status: 'active',
-      },
-    })));
-    await page.goto('/lojerat/wordle');
-    const misses = WORDLE_ALLOWED.filter((word) => word.display !== 'fjalë').slice(0, 6);
-    for (const word of misses) {
-      for (const token of word.tokens) {
-        await page.getByTestId(`wordle-key-${token}`).click();
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      for (let letter = 0; letter < 5; letter += 1) {
+        await page.getByTestId('wordle-key-B').click();
       }
       await page.getByRole('button', { name: 'Kontrollo' }).click();
     }
@@ -223,6 +206,34 @@ test.describe('Lidh Shkronjat', () => {
     await page.getByRole('button', { name: 'Puzzle i ri' }).click();
     await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(puzzle.title);
     await expect(page.getByTestId('connect-progress')).toHaveText('0 / 4');
+  });
+
+  test('lets the player build every target word across every puzzle', async ({ page }) => {
+    const firstPuzzle = CONNECT_PUZZLES[0]!;
+    const stalePuzzle = CONNECT_PUZZLES[1]!;
+    await page.goto('/');
+    await page.evaluate(({ puzzleId, tiles }) => localStorage.setItem('shkronjat-tona-connect-v2', JSON.stringify({
+      version: 2,
+      data: { puzzleId, found: [], tiles, score: 0 },
+    })), { puzzleId: stalePuzzle.id, tiles: Array(stalePuzzle.tiles.length).fill('A') });
+    await page.goto('/lojerat/lidh-shkronjat');
+    await expect(page.getByRole('heading', { level: 1, name: firstPuzzle.title })).toBeVisible();
+
+    for (const [puzzleIndex, puzzle] of CONNECT_PUZZLES.entries()) {
+      await expect(page.getByRole('heading', { level: 1, name: puzzle.title })).toBeVisible();
+      const tiles = await page.locator('[data-testid^="connect-tile-"][data-letter-index]').allTextContents();
+      for (const [targetIndex, target] of puzzle.targets.entries()) {
+        await tapTiles(page, 'connect-tile', tiles, target.tokens);
+        await expect(page.getByTestId('connect-word')).toHaveText(target.tokens.join(''));
+        await page.getByRole('button', { name: 'Kontrollo fjalën' }).click();
+        await expect(page.getByTestId('connect-progress')).toHaveText(`${targetIndex + 1} / ${puzzle.targets.length}`);
+        await expect(page.locator('p[role="status"]')).toContainText(`gjete fjalën «${target.word}»`);
+      }
+
+      if (puzzleIndex < CONNECT_PUZZLES.length - 1) {
+        await page.getByRole('button', { name: 'Puzzle i ri' }).click();
+      }
+    }
   });
 });
 
@@ -271,5 +282,33 @@ test.describe('Gjej Fjalët — Word Connect', () => {
     await expect(page.getByTestId('word-connect-progress')).toHaveText('0 / 5');
     const newTiles = await page.locator('[data-testid^="word-connect-tile-"][data-letter-index]').allTextContents();
     expect([...newTiles].sort()).not.toEqual([...round.letters].sort());
+  });
+
+  test('lets the player build every target word across every round', async ({ page }) => {
+    const firstRound = WORD_CONNECT_ROUNDS[0]!;
+    const staleRound = WORD_CONNECT_ROUNDS[1]!;
+    await page.goto('/');
+    await page.evaluate(({ roundId, letters }) => localStorage.setItem('shkronjat-tona-word-connect-v1', JSON.stringify({
+      version: 1,
+      data: { roundId, letters, found: [], score: 0 },
+    })), { roundId: staleRound.id, letters: Array(5).fill('A') });
+    await page.goto('/lojerat/gjej-fjalët');
+    await expect(page.getByText(firstRound.title, { exact: true })).toBeVisible();
+
+    for (const [roundIndex, round] of WORD_CONNECT_ROUNDS.entries()) {
+      await expect(page.getByText(round.title, { exact: true })).toBeVisible();
+      const letters = await page.locator('[data-testid^="word-connect-tile-"][data-letter-index]').allTextContents();
+      for (const [wordIndex, word] of round.words.entries()) {
+        await tapTiles(page, 'word-connect-tile', letters, word.tokens);
+        await expect(page.getByTestId('word-connect-current')).toHaveText(word.tokens.join(''));
+        await page.getByRole('button', { name: 'Gjej fjalën' }).click();
+        await expect(page.getByTestId('word-connect-progress')).toHaveText(`${wordIndex + 1} / ${round.words.length}`);
+        await expect(page.locator('p[role="status"]')).toContainText(`Fjalë e re: «${word.display}»!`);
+      }
+
+      if (roundIndex < WORD_CONNECT_ROUNDS.length - 1) {
+        await page.getByRole('button', { name: 'Raund i ri' }).click();
+      }
+    }
   });
 });

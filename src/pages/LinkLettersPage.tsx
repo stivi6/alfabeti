@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { LetterConnectBoard } from '../components/game/LetterConnectBoard';
 import { PageLayout } from '../components/layout/PageLayout';
 import { CONNECT_PUZZLES } from '../data/connectLetterPuzzles';
-import { canonicalTokenSequence } from '../lib/albanianLetters';
+import { canonicalTokenSequence, sameTokenInventory } from '../lib/albanianLetters';
 import { readGameState, writeGameState } from '../lib/localGameStorage';
 
 const KEY = 'shkronjat-tona-connect-v2';
@@ -34,11 +34,18 @@ function createState(puzzleIndex = 0): ConnectState {
 function isSavedState(value: ConnectState | null): value is ConnectState {
   if (!value) return false;
   const puzzle = CONNECT_PUZZLES.find((item) => item.id === value.puzzleId);
+  const validTargets = new Set(
+    puzzle?.targets.map((target) => canonicalTokenSequence(target.tokens)) ?? [],
+  );
   return Boolean(
     puzzle
       && Array.isArray(value.found)
+      && value.found.every((key) => typeof key === 'string' && validTargets.has(key))
+      && new Set(value.found).size === value.found.length
       && Array.isArray(value.tiles)
+      && value.tiles.every((tile) => typeof tile === 'string')
       && value.tiles.length === puzzle.tiles.length
+      && sameTokenInventory(value.tiles, puzzle.tiles)
       && Number.isFinite(value.score),
   );
 }
