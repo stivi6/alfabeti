@@ -19,7 +19,7 @@ export function PageLayout({
   return (
     <div className="flex min-h-svh flex-col">
       <a className="skip-link" href="#main-content">
-        Skip to content
+        Kalo te përmbajtja
       </a>
       <SiteHeader variant={variant}>{headerActions}</SiteHeader>
       <main id="main-content" className={cn('flex-1', mainClassName)}>

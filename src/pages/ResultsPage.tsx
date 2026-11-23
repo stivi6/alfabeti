@@ -50,7 +50,7 @@ export function ResultsPage() {
               <Badge tone="amber" className="gap-1.5"><Trophy size={14} aria-hidden="true" />Sfidat u përfunduan</Badge>
               <h1 className="mt-5 text-[clamp(2.15rem,5vw,3.35rem)] leading-[1.02]">Rrugëtimi yt në gjuhën shqipe u përfundua!</h1>
               <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-muted sm:text-base">
-                Kalove nëpër të dy kuizet dhe përfundo gjithçka. Këtu është rezultati yt.
+                Përfundove të dy kuizet. Ja si shkoi.
               </p>
               <div className="mt-7 rounded-2xl border border-primary/20 bg-primary-soft/55 p-4 sm:p-5">
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-dark/75">Kategoria</p>

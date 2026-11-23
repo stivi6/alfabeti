@@ -78,7 +78,7 @@ export function HomePage() {
               <p className="eyebrow">Dy kuize dhe lojëra me fjalë</p>
               <h2 className="mt-3 text-[clamp(2rem,4vw,2.9rem)]">Dy kuize. Tri lojëra. Një festë e gjuhës.</h2>
               <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink-muted sm:text-base">
-                Çdo lojë ka pesë sfida të shkurtra. Zgjidh, mëso dhe vazhdo nëpër kapituj.
+                Secili kuiz përmban pesë sfida të shkurtra. Zgjidh, mëso dhe vazhdo nëpër kapituj.
               </p>
             </div>
             <Link to="/play" className="group inline-flex min-h-11 items-center gap-1.5 self-start text-sm font-bold text-primary-dark hover:text-primary sm:self-end">

@@ -44,7 +44,7 @@ export function SiteHeader({ variant = 'home', children }: SiteHeaderProps) {
 
         {variant === 'home' ? (
           <>
-            <nav className="hidden items-center gap-7 md:flex" aria-label="Main navigation">
+            <nav className="hidden items-center gap-7 md:flex" aria-label="Navigimi kryesor">
               <Link
                 to="/"
                 aria-current={location.pathname === '/' ? 'page' : undefined}
@@ -83,7 +83,7 @@ export function SiteHeader({ variant = 'home', children }: SiteHeaderProps) {
               className="inline-flex size-11 items-center justify-center rounded-xl border border-border bg-surface text-ink transition-colors hover:bg-lilac md:hidden"
               aria-expanded={menuOpen}
               aria-controls={menuId}
-              aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-label={menuOpen ? 'Mbyll menynë' : 'Hap menynë'}
               onClick={() => setMenuOpen((open) => !open)}
             >
               {menuOpen ? <X size={21} aria-hidden="true" /> : <Menu size={21} aria-hidden="true" />}
@@ -96,7 +96,7 @@ export function SiteHeader({ variant = 'home', children }: SiteHeaderProps) {
 
       {variant === 'home' && menuOpen && (
         <div id={menuId} className="border-t border-border bg-surface px-4 pb-5 pt-3 md:hidden">
-          <nav aria-label="Mobile navigation" className="flex flex-col gap-1">
+          <nav aria-label="Navigimi në celular" className="flex flex-col gap-1">
             <Link
               to="/"
               className="flex min-h-11 items-center rounded-xl px-3 text-sm font-semibold text-ink hover:bg-lilac"

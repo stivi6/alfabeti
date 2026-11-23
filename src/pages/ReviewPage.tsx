@@ -37,7 +37,7 @@ interface ChapterMistakes {
 
 function getReviewQuestion(prompt: Prompt): string {
   if (prompt.kind === 'sentence') {
-    return prompt.translation ? `Build: ${prompt.translation}` : prompt.question;
+    return prompt.translation ? `Formo fjalinë: ${prompt.translation}` : prompt.question;
   }
   return getPromptQuestion(prompt);
 }
@@ -119,7 +119,7 @@ export function ReviewPage() {
             <p className="eyebrow">Rishikim i detajuar</p>
             {totalMistakes > 0 ? (
               <Badge tone="danger">
-                {totalMistakes} prompt{totalMistakes === 1 ? '' : 's'} to review
+                {totalMistakes} pyetje për t’u rishikuar
               </Badge>
             ) : null}
           </div>
@@ -187,7 +187,7 @@ export function ReviewPage() {
                         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-border/80 pb-3">
                           <h3 className="text-lg text-ink">{exercise.title}</h3>
                           <p className="text-xs font-semibold text-ink-muted">
-                            {mistakes.length} prompt{mistakes.length === 1 ? '' : 's'} to revisit
+                            {mistakes.length} pyetje për t’u rishikuar
                           </p>
                         </div>
 

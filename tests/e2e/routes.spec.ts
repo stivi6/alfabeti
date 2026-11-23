@@ -16,7 +16,7 @@ test('key routes render without console errors, failed requests, or external cal
   for (const route of [
     '/',
     '/play',
-    '/play/c1-e3',
+    '/play/c2-e3',
     '/play/c3-e3',
     '/results',
     '/review',

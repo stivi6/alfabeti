@@ -10,10 +10,14 @@ test.describe('results and review', () => {
     await seedProgress(page, allExercisesComplete({ wrongPromptIds: ['c2-e2-p2'] }));
     await page.goto('/results');
     await expect(page.getByRole('heading', { level: 1, name: /Rrugëtimi yt në gjuhën shqipe/ })).toBeVisible();
-    await expect(page.locator('section[aria-labelledby="chapter-breakdown-heading"] article')).toHaveCount(3);
+    await expect(page.locator('section[aria-labelledby="chapter-breakdown-heading"] article')).toHaveCount(2);
     await page.getByRole('link', { name: /Rishiko gabimet/ }).click();
     await expect(page).toHaveURL(/\/review$/);
     await expect(page.getByRole('heading', { level: 1, name: 'Rishiko gabimet' })).toBeVisible();
+    await expect(page.getByText('1 pyetje për t’u rishikuar').first()).toBeVisible();
+    await expect(page.getByText('Kopertina e librit është e kuqe.')).toBeVisible();
+    await expect(page.getByText('Kallëzore', { exact: true })).toBeVisible();
+    await expect(page.getByText('Gjinore', { exact: true })).toBeVisible();
   });
   test('play again asks for confirmation and resets progress', async ({ page }) => {
     await seedProgress(page, allExercisesComplete());

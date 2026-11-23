@@ -67,7 +67,7 @@ function ExerciseSession({ exercise, chapter }: { exercise: Exercise; chapter: C
       aria-label="Kthehu te lojërat"
     >
       <ArrowLeft size={16} strokeWidth={2} aria-hidden="true" />
-      <span className="hidden sm:inline">Roadmap</span>
+      <span className="hidden sm:inline">Rrugëtimi</span>
     </Link>
   );
 

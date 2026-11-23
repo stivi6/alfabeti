@@ -21,7 +21,7 @@ function getSummaryPromptLabel(exercise: Exercise, index: number): string {
     return '';
   }
   if (prompt.kind === 'sentence') {
-    return prompt.translation ? `Build: ${prompt.translation}` : prompt.question;
+    return prompt.translation ? `Formo fjalinë: ${prompt.translation}` : prompt.question;
   }
   return getPromptQuestion(prompt);
 }

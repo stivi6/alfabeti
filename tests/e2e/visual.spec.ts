@@ -14,7 +14,7 @@ const SCREENS: Screen[] = [
   { name: 'roadmap', path: '/play' },
   {
     name: 'exercise-multiple-choice',
-    path: '/play/c1-e3',
+    path: '/play/c2-e3',
     progress: buildProgress({ completedCount: 2 }),
   },
   {

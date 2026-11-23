@@ -9,8 +9,8 @@ export const EXERCISES: Exercise[] = [
       {id:'c2-e1-p1',kind:'choice',question:'Zgjidh formën e saktë.',options:[{id:'shtepi',label:'shtepi'},{id:'shtepia',label:'shtëpi'}],correctOptionId:'shtepia',explanation:'Fjala “shtëpi” shkruhet me ë pas shkronjës t.'},
       {id:'c2-e1-p2',kind:'choice',question:'Zgjidh formën e saktë.',options:[{id:'qeles',label:'qeles'},{id:'celes',label:'çelës'}],correctOptionId:'celes',explanation:'“Çelës” shkruhet me ç në fillim dhe ë në fund.'},
       {id:'c2-e1-p3',kind:'choice',question:'Zgjidh formën e saktë.',options:[{id:'gjuhe',label:'gjuhe'},{id:'gjuhë',label:'gjuhë'}],correctOptionId:'gjuhë',explanation:'Fjala “gjuhë” shkruhet me ë në fund.'},
-      {id:'c2-e1-p4',kind:'choice',question:'Në ___ mësojmë çdo ditë.',options:[{id:'shkolle',label:'shkollë'},{id:'shkolla',label:'shkolla'}],correctOptionId:'shkolle',explanation:'Në këtë fjali, forma e paskajshme e shquar shkruhet “shkollë”.'},
-      {id:'c2-e1-p5',kind:'choice',question:'Gjuha shqipe ka një ___ të veçantë.',options:[{id:'histori',label:'histori'},{id:'historie',label:'historinë'}],correctOptionId:'histori',explanation:'Pjesa “ka një” kërkon trajtën e pashtjelluar “histori”.'},
+      {id:'c2-e1-p4',kind:'choice',question:'Në ___ mësojmë çdo ditë.',options:[{id:'shkolle',label:'shkollë'},{id:'shkolla',label:'shkolla'}],correctOptionId:'shkolle',explanation:'Shprehja e saktë është “Në shkollë mësojmë çdo ditë.”'},
+      {id:'c2-e1-p5',kind:'choice',question:'Gjuha shqipe ka një ___ të veçantë.',options:[{id:'histori',label:'histori'},{id:'historie',label:'historinë'}],correctOptionId:'histori',explanation:'Pas togfjalëshit “ka një”, emri përdoret në trajtën e pashquar: “histori”.'},
     ],
   },
   {
